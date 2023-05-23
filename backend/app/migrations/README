@@ -1,0 +1,2 @@
+Generic single-database configuration.
+alembic revision --autogenerate -m "your message here"

@@ -1,0 +1,17 @@
+fastapi==0.95.2
+databases[postgresql]
+python-jose[cryptography]
+python-multipart
+aiofiles
+python-dotenv
+httpx
+alembic
+passlib[bcrypt]
+SQLAlchemy==2.0.13
+uvicorn
+psycopg2-binary==2.9.6
+isort==5.12.0
+pydantic[email]
+fastapi-users==11.0.0
+fastapi-users-db-sqlalchemy==5.0.0
+asyncpg==0.27.0

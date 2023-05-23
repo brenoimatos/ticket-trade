@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FastAPI",
+            "type": "python",
+            "request": "launch",
+            "program": "app/main.py",
+            "justMyCode": true,
+            "console": "integratedTerminal",
+            "purpose": ["debug-in-terminal"],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

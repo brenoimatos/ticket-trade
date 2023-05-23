@@ -1,0 +1,9 @@
+{
+    "editor.formatOnType": true,
+    "editor.formatOnSave": false,
+    "isort.path": ["/usr/local/bin/isort"],
+    "python.linting.isortEnabled": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+}
