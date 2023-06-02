@@ -3,7 +3,8 @@ import uuid
 from fastapi import Depends
 from fastapi_users import FastAPIUsers
 from fastapi_users.authentication import (AuthenticationBackend,
-                                          BearerTransport, JWTStrategy)
+                                          BearerTransport, CookieTransport,
+                                          JWTStrategy)
 from fastapi_users.manager import BaseUserManager, UUIDIDMixin
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,8 +13,14 @@ from app.core.config import settings
 from app.deps.db import get_async_session
 from app.models.user import User as UserModel
 
-bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
-
+bearer_transport = BearerTransport(tokenUrl=f"{settings.API_PATH}/auth/jwt/login")
+cookie_transport = CookieTransport(
+    cookie_max_age=3600,
+    cookie_name='cookie-ticket',
+    cookie_secure=True,
+    cookie_samesite='none',
+    cookie_httponly=False
+)
 
 def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(
@@ -24,7 +31,7 @@ def get_jwt_strategy() -> JWTStrategy:
 
 jwt_authentication = AuthenticationBackend(
     name="jwt",
-    transport=bearer_transport,
+    transport=cookie_transport,
     get_strategy=get_jwt_strategy,
 )
 

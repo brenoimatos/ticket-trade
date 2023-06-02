@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     API_PATH: str = "/api/v1"
     # The following variables need to be defined in environment
 
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
+    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost:3000/", "http://localhost:3000"]
     TEST_DATABASE_URL: Optional[PostgresDsn]
     DATABASE_URL: PostgresDsn = "postgresql://postgres:postgres@localhost:5432/db_fastapi"
     ASYNC_DATABASE_URL: Optional[PostgresDsn]

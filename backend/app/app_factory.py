@@ -42,8 +42,7 @@ class AppFactory:
                 jwt_authentication,
                 requires_verification=False,
             ),
-            # prefix=f"{self.config.API_PATH}/auth/jwt",
-            prefix="/auth/jwt",
+            prefix=f"{self.config.API_PATH}/auth/jwt",
             tags=["auth"],
         )
         self.app.include_router(
@@ -80,9 +79,9 @@ class AppFactory:
                 CORSMiddleware,
                 allow_origins=[str(origin) for origin in self.config.BACKEND_CORS_ORIGINS],
                 allow_credentials=True,
-                allow_methods=["*"],
-                expose_headers=["Content-Range", "Range"],
-                allow_headers=["Authorization", "Range", "Content-Range"],
+                allow_methods=["POST", "GET"],
+                expose_headers=["Content-Range", "Range", "Access-Control-Allow-Credentials"],
+                allow_headers=["Authorization", "Range", "Content-Range", "Access-Control-Allow-Credentials"],
             )
 
     def use_route_names_as_operation_ids(self) -> None:
