@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     TEST_DATABASE_URL: Optional[PostgresDsn]
     DATABASE_URL: PostgresDsn = "postgresql://postgres:postgres@localhost:5432/db_fastapi"
     ASYNC_DATABASE_URL: Optional[PostgresDsn]
+    GOOGLE_CLIENT_ID = "602426490845-9jjid9ons5i52f7tb5p7pghfb627294v.apps.googleusercontent.com"
+    GOOGLE_CLIENT_SECRET = "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"
+    GOOGLE_STATE_SECRET = "d2a0bbed93d3caf52848430c7286bASDA1_@3e1490cfe1415334946f54600309c4b4eca"
 
     @validator("DATABASE_URL", pre=True)
     def build_test_database_url(cls, v: Optional[str], values: Dict[str, Any]):
@@ -40,4 +43,4 @@ class Settings(BaseSettings):
     #  END: required environment variables
 
 
-settings = Settings()
+settings_conf = Settings()

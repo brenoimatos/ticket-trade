@@ -4,15 +4,16 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class TicketBase(BaseModel):
-    price: int
-    is_for_sale: bool
-    is_sold: bool = False
-
-class TicketCreate(TicketBase):
-    event_id: int
+class EventBase(BaseModel):
+    name: str
+    location: str
+    date: datetime
+    ticket_url: str
     
-class Ticket(TicketCreate):
+class EventCreate(EventBase):
+    pass
+
+class Event(EventBase):
     id: int
     created_at: datetime
     updated_at: datetime

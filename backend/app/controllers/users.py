@@ -4,11 +4,12 @@ from fastapi.params import Depends
 from fastapi.routing import APIRouter
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
+from sqlalchemy.orm import selectinload
 from starlette.responses import Response
 
 from app.deps.db import get_async_session
 from app.deps.users import current_superuser
-from app.dto.user import UserRead
+from app.dto.user import UserCreate, UserRead
 from app.models.user import User
 
 router = APIRouter()
@@ -24,7 +25,9 @@ async def get_users(
 ) -> Any:
     total = await session.scalar(select(func.count(User.id)))
     users = (
-        (await session.execute(select(User).offset(skip).limit(limit))).scalars().all()
+        (await session.execute(select(User).offset(skip).limit(limit))).scalars().unique().all()
     )
+
+
     response.headers["Content-Range"] = f"{skip}-{skip + len(users)}/{total}"
     return users

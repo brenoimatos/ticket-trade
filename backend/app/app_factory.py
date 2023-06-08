@@ -4,29 +4,27 @@ from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 from fastapi_users import FastAPIUsers
-from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 
 from app.controllers import api_router
-from app.core.config import settings
-from app.deps.users import fastapi_users_obj, jwt_authentication
+from app.core.config import settings_conf
+from app.deps.users import auth_backend, fastapi_users_obj, google_oauth_client
 from app.dto.user import UserCreate, UserRead, UserUpdate
 
 
 class AppFactory:
     def __init__(self):
-        self.config = settings
+        self.config = settings_conf
         self.description = f"{self.config.PROJECT_NAME} API"
         self.fastapi_users_obj = fastapi_users_obj
         self.app = FastAPI(
             title=self.config.PROJECT_NAME,
             openapi_url=f"{self.config.API_PATH}/openapi.json",
             description=self.description,
-            redoc_url=None,
-            # root_path=self.config.API_PATH
+            redoc_url=None
         )
 
     def create_app(self):
@@ -36,12 +34,18 @@ class AppFactory:
         return self.app
 
     def setup_routers(self, fastapi_users_obj: FastAPIUsers) -> None:
+        
         self.app.include_router(api_router, prefix=self.config.API_PATH)
         self.app.include_router(
-            fastapi_users_obj.get_auth_router(
-                jwt_authentication,
-                requires_verification=False,
+            fastapi_users_obj.get_oauth_router(
+                google_oauth_client, auth_backend, settings_conf.GOOGLE_STATE_SECRET,
+                associate_by_email=True, is_verified_by_default=True
             ),
+            prefix=f"{self.config.API_PATH}/auth/google", 
+            tags=["auth"]
+        )
+        self.app.include_router(
+            fastapi_users_obj.get_auth_router(auth_backend, requires_verification=False),
             prefix=f"{self.config.API_PATH}/auth/jwt",
             tags=["auth"],
         )
@@ -51,9 +55,7 @@ class AppFactory:
             tags=["auth"],
         )
         self.app.include_router(
-            fastapi_users_obj.get_users_router(
-                UserRead, UserUpdate, requires_verification=False
-            ),
+            fastapi_users_obj.get_users_router(UserRead, UserUpdate, requires_verification=False),
             prefix=f"{self.config.API_PATH}/users",
             tags=["users"],
         )

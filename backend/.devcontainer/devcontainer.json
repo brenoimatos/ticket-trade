@@ -4,7 +4,7 @@
   "service": "app",
   "workspaceFolder": "/workspace",
   "shutdownAction": "stopCompose",
-  "settings": { 
+  "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
   "extensions": [
