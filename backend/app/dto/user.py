@@ -3,8 +3,6 @@ from typing import Optional
 
 from fastapi_users import schemas
 
-from app.dto.review import Review
-
 
 class UserBase(schemas.BaseUser[uuid.UUID]):
     name: str

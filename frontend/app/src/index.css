@@ -1,0 +1,486 @@
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+
+h1 {
+  text-align: center;
+}
+.custom-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(#744ec2, #5636a1);
+  color: white;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  height: 50px;
+  width: 100px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none;
+  width: 100%;
+}
+
+
+.custom-button:hover {
+  background: linear-gradient(#5636a1, #3e2378);
+}
+
+.custom-link-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(#744ec2, #5636a1);
+  color: white;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  height: 30px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none;
+}
+
+
+.custom-link-button:hover {
+  background: linear-gradient(#5636a1, #3e2378);
+}
+
+
+.back-button {
+  margin-top: 10px;
+  text-align: center;
+  color: #000000;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 15px;
+}
+
+.back-button:hover {
+  color: #5636a1;
+}
+
+/* Header.css */
+header {
+  padding: 20px 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+}
+
+.logo-container {
+  margin-right: auto; /* Alinha o logo à esquerda */
+  height: 40;
+}
+
+.logo-image {
+  height: 35px; /* Defina a largura desejada */
+}
+
+
+.nav-links {
+  display: flex;
+  justify-content: center; /* Centraliza os links horizontalmente */
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  margin-left: 10px; /* Adicione um espaçamento entre os links */
+}
+
+.nav-links a.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* EventList.css */
+.event-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.event-link {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+.event-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.event-date {
+  display: flex;
+  align-items: center;
+  color: red;
+  margin-bottom: 2px;
+}
+
+.date-icon {
+  margin-right: 5px;
+}
+
+.event-card h4 {
+  font-size: 22px;
+  margin: 3px 0;
+}
+
+.event-location {
+  font-size: 14px;
+  color: #333;
+  margin: 0px 0;
+  font-weight: 300;
+}
+
+.event-price {
+  align-self: flex-end;
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.event-card:hover {
+  background-color: #f1f1f1; /* Cor de fundo ao passar o mouse */
+}
+
+/* TicketList.css */
+
+.ticket-list {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin: auto;
+}
+
+.ticket-card {
+  display: flex;
+  align-items: center;
+  border: 1px solid #333;
+  margin-bottom: 20px;
+  padding: 10px;
+  text-decoration: none;
+  color: inherit;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  justify-content: space-between;
+}
+
+
+
+.sell-tickets, .buy-tickets {
+  width: 45%;
+  padding: 0 5px;
+}
+
+.sell-tickets h2, .buy-tickets h2{
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.ticket-card small {
+  color: #777;
+}
+
+.separator {
+  width: 0.1%;
+  border-left: 1px solid #333;
+  height: 100vh;
+}
+
+.ticket-card:hover {
+  background-color: #f1f1f1; /* Cor de fundo ao passar o mouse */
+}
+
+.create-ticket {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+/* EventDetail.css */
+
+.event-detail-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #edeef1;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  width: 60%;
+  margin: 0 auto;
+  margin-bottom: 5px;
+}
+
+.event-detail-card h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.event-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px; /* Espaçamento de 20 pixels entre os itens */
+  margin-top: 3px;
+  margin-bottom: 10px;
+}
+
+
+.event-details div {
+  font-size: 18px;
+}
+
+.ticket-link {
+  color: #161616;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.ticket-link:hover {
+  background-color: #ddd;
+}
+
+/* Search Container.css */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  width: calc(60% - 26px); /* Subtraia o tamanho do ícone da lupa */
+  margin-top: 20px;
+  border-radius: 20px; /* Aumente o valor do border-radius */
+  border: 2px solid #ccc;
+  position: relative;
+}
+
+.search-input {
+  width: 90%;
+  height: 40px;
+  padding-left: 26px;
+  padding-right: 10px; /* Adicione um preenchimento à direita */
+  border: none;
+  font-size: 16px;
+  outline: none;
+  margin-left: 24px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+/* Home.css */
+.create-event-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+
+}
+
+.create-event-text {
+  color: #777;
+  margin-bottom: 10px;
+}
+
+/* EventCreate.css */
+.event-create-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  
+}
+
+.event-create-container h2 {
+  margin-bottom: 10px;
+}
+
+.event-create-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.event-create-container form div {
+  margin-bottom: 10px;
+}
+
+.event-create-container label {
+  margin-right: 10px;
+}
+
+.event-create-container input {
+  width: 300px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+
+/* Login.css */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 350px;
+}
+
+.login-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-button {
+  width: 100%;
+  height: 40px;
+}
+
+/* EventCreate.css */
+
+.event-create-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* centraliza o contêiner */
+  max-width: 500px; /* altera a largura máxima do contêiner */
+  box-sizing: border-box; /* inclui padding e border na largura total do elemento */
+}
+
+.event-create-container h2 {
+  text-align: center;
+  color: #000000;
+  font-size: 42px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.event-create-container form {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* define a largura do form para o contêiner */
+  box-sizing: border-box; /* considera padding e border no tamanho total */
+}
+
+.event-create-container input[type="text"],
+.event-create-container input[type="datetime-local"],
+.event-create-container button {
+  margin: 5px 0;
+  padding: 10px 0px;
+  border: none;
+  border-radius: 5px;
+  width: 100%; /* Ajuste a largura dos campos de input */
+}
+
+.event-create-container input[type="text"],
+.event-create-container input[type="datetime-local"] {
+  background-color: #f8f8f8;
+  color: #333;
+  padding-left: 10px; /* Ajuste esse valor conforme necessário */
+  box-sizing: border-box; /* Adiciona padding e border na largura total */
+  
+}
+
+
+/* TicketCreate.css */
+
+.ticket-create-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; /* centraliza o contêiner */
+  max-width: 500px; /* altera a largura máxima do contêiner */
+  box-sizing: border-box; /* inclui padding e border na largura total do elemento */
+}
+
+
+.ticket-create-container h2 {
+  margin-bottom: 10px;
+  font-size: 42px;
+}
+
+.ticket-create-container form {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ticket-create-container form div {
+  margin-bottom: 10px;
+  width: 100%;
+  
+}
+
+.ticket-create-container label {
+  margin-right: 10px;
+}
+
+.ticket-create-container input,
+.ticket-create-container select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px; /* Ajuste esse valor conforme necessário */
+  padding-left: 10px; /* Ajuste esse valor conforme necessário */
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}

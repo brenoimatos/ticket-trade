@@ -31,6 +31,7 @@ async def create_ticket(
 @router.get("/", response_model=List[TicketSchema])
 async def read_tickets(
     response: Response,
+    event_id: int,
     session: AsyncSession = Depends(get_async_session),
     request_params: RequestParams = Depends(parse_react_admin_params(TicketModel)),
 ) -> Any:
@@ -40,6 +41,8 @@ async def read_tickets(
     tickets = (
         await session.execute(
             select(TicketModel)
+            .where(TicketModel.event_id == event_id)
+            .where(TicketModel.is_sold == False)
             .offset(request_params.skip)
             .limit(request_params.limit)
             .order_by(request_params.order_by)

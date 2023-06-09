@@ -1,12 +1,15 @@
-import Layout from "../components/Layout/Layout";
-import TicketsList from "../components/TicketList";
+// Tickets.js
+import React from 'react';
+import TicketList from '../components/TicketList';
+import EventDetail from '../components/EventDetail'
 
+function Tickets() {
+  return (
+    <div>
+      <EventDetail />
+      <TicketList />
+    </div>
+  );
+}
 
-export default function TicketsPage() {
-    return (
-      <div className="TicketsPage">
-        <Layout/>
-        <TicketsList/>
-      </div>
-    );
-  }
+export default Tickets;

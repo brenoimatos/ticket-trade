@@ -35,7 +35,7 @@ google_oauth_client = GoogleOAuth2(settings_conf.GOOGLE_CLIENT_ID, settings_conf
 
 auth_backend = AuthenticationBackend(
     name="jwt",
-    transport=bearer_transport,
+    transport=cookie_transport,
     get_strategy=get_jwt_strategy,
 )
 

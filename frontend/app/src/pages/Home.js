@@ -1,11 +1,21 @@
-import Layout from "../components/Layout/Layout";
+// Home.js
+import React from 'react';
+import { Link } from 'react-router-dom';
 
+import EventSearch from '../components/EventSearch';
 
-export default function HomePage() {
-    return (
-      <div className="Home">
-        <Layout/>
-        <h1> Home </h1>
+function Home() {
+  return (
+    <div>
+      <EventSearch></EventSearch>
+      <div className="create-event-button-container">
+        <span className="create-event-text">
+          Não achou o seu evento? Crie aqui
+        </span>
+        <Link to="/events/create" className="custom-link-button">Adicionar novo evento </Link>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
+export default Home;
