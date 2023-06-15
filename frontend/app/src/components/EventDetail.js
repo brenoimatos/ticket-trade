@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { BASE_URL } from '../api/apiConfig';
+import { useParams, useLoaderData } from 'react-router-dom';
+
+
 
 
 function EventDetail() {
-  const [event, setEvent] = useState(null);
-  const { eventId } = useParams();
-
-  useEffect(() => {
-    fetch(`${BASE_URL}/events/?event_id=${eventId}`)
-      .then(res => res.json())
-      .then(data => setEvent(data[0]))
-      .catch(err => console.error(err));
-  }, [eventId]);
+  // const [event, setEvent] = useState(null);
+  // const { eventId } = useParams();
+  const {events} = useLoaderData()
+  const event = events[0]
 
   const formatDate = (dateString) => {
     const options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };

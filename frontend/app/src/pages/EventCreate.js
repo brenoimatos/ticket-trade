@@ -1,72 +1,73 @@
-import React, { useState } from 'react';
-import { BASE_URL } from '../api/apiConfig';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import { createEvent } from '../api/events'
+import { useNavigation, Form, redirect, useActionData } from 'react-router-dom'
+
+export async function action({ request }) {
+  const formData = await request.formData()
+  const name = formData.get('name')
+  const location = formData.get('location')
+  const date = formData.get('date')
+  const ticket_url = formData.get('ticket_url')
+  try {
+    const data = await createEvent({ name, location, date, ticket_url })
+    return redirect(`/events/${data.id}`)
+  } catch (err) {
+    return err.message
+  }
+}
 
 function EventCreate() {
-  const [eventData, setEventData] = useState({
-    name: '',
-    location: '',
-    date: '',
-    ticket_url: ''
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEventData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch(`${BASE_URL}/events/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(eventData),
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        window.location.href = `/events/${data.id}`;
-      } else {
-        console.error('Failed to create event');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const errorMessage = useActionData()
+  const navigation = useNavigation()
 
   return (
     <div className="event-create-container">
-      <h2>Adicionar novo evento</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Nome:</label>
-          <input type="text" name="name" value={eventData.name} onChange={handleChange} required />
-        </div>
-        <div>
-          <label htmlFor="location">Local:</label>
-          <input type="text" name="location" value={eventData.location} onChange={handleChange} required />
-        </div>
-        <div>
-          <label htmlFor="date">Data:</label>
-          <input type="datetime-local" name="date" value={eventData.date} onChange={handleChange} required />
-        </div>
-        <div>
-          <label htmlFor="ticket_url">Link da bilheteria oficial:</label>
-          <input type="text" name="ticket_url" value={eventData.ticket_url} onChange={handleChange} required />
-        </div>
-        <button className='custom-button' type="submit">Criar evento </button>
-        <Link to="/" className="back-button">Voltar</Link>
-      </form>
+      <h1>Adicionar novo evento</h1>
+      {errorMessage && <h3 className="red">{errorMessage}</h3>}
+
+      <Form method="post" className="ticket-form">
+        <label>
+          Nome:
+          <input
+            name="name"
+            type="text"
+            placeholder="Ex: Festa de Ano Novo"
+            required
+          />
+        </label>
+        <label>
+          Local:
+          <input
+            name="location"
+            type="text"
+            placeholder="Rio de Janeiro"
+            required
+          />
+        </label>
+        <label>
+          Data:
+          <input name="date" type="datetime-local" required />
+        </label>
+        <label>
+          Link da bilheteria oficial:
+          <input
+            name="ticket_url"
+            type="text"
+            placeholder="Ex: www.bilheteriaoficial.com/evento"
+          />
+        </label>
+        <button
+          className="custom-button"
+          disabled={navigation.state === 'submitting'}
+        >
+          {navigation.state === 'submitting' ? 'Criando...' : 'Criar'}
+        </button>
+        <Link to="/" className="back-button">
+          Voltar
+        </Link>
+      </Form>
     </div>
-  );
+  )
 }
 
-export default EventCreate;
+export default EventCreate

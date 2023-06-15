@@ -4,7 +4,6 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-
 h1 {
   text-align: center;
 }
@@ -27,9 +26,17 @@ h1 {
   width: 100%;
 }
 
-
-.custom-button:hover {
+.custom-button:hover:enabled {
   background: linear-gradient(#5636a1, #3e2378);
+}
+
+.custom-button:disabled {
+  background: linear-gradient(
+    #b8b2c8,
+    #9a90b2
+  ); /* tonalidades de cinza derivadas das cores originais */
+  color: #f1f1f1; /* cor do texto também deve ser mais clara para indicar que o botão está desabilitado */
+  cursor: not-allowed;
 }
 
 .custom-link-button {
@@ -49,11 +56,9 @@ h1 {
   text-decoration: none;
 }
 
-
 .custom-link-button:hover {
   background: linear-gradient(#5636a1, #3e2378);
 }
-
 
 .back-button {
   margin-top: 10px;
@@ -88,7 +93,6 @@ header {
 .logo-image {
   height: 35px; /* Defina a largura desejada */
 }
-
 
 .nav-links {
   display: flex;
@@ -192,14 +196,14 @@ header {
   justify-content: space-between;
 }
 
-
-
-.sell-tickets, .buy-tickets {
+.sell-tickets,
+.buy-tickets {
   width: 45%;
   padding: 0 5px;
 }
 
-.sell-tickets h2, .buy-tickets h2{
+.sell-tickets h2,
+.buy-tickets h2 {
   text-align: center;
   margin-bottom: 10px;
 }
@@ -257,7 +261,6 @@ header {
   margin-top: 3px;
   margin-bottom: 10px;
 }
-
 
 .event-details div {
   font-size: 18px;
@@ -319,7 +322,6 @@ header {
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
-
 }
 
 .create-event-text {
@@ -334,7 +336,6 @@ header {
   align-items: center;
   justify-content: center;
   margin-top: 20px;
-  
 }
 
 .event-create-container h2 {
@@ -361,35 +362,47 @@ header {
   border-radius: 3px;
 }
 
-
 /* Login.css */
+
 .login-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  padding-inline: 27px;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 350px;
+  width: 100%;
+  max-width: 500px;
 }
 
-.login-input {
-  box-sizing: border-box;
-  width: 100%;
+.login-form > input {
+  border: 1px solid rgba(209, 213, 219);
   height: 40px;
-  padding: 15px;
+  text-indent: 10px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: 400;
+}
+
+.login-form > input:focus {
+  outline: none;
+}
+
+.login-form > input:first-of-type {
+  border-radius: 6px 6px 0px 0px;
+}
+
+.login-form > input:last-of-type {
+  border-radius: 0px 0px 6px 6px;
+  border-top: none;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
 }
 
-.login-button {
-  width: 100%;
-  height: 40px;
+.red {
+  color: #cc0000;
 }
 
 /* EventCreate.css */
@@ -419,8 +432,8 @@ header {
   box-sizing: border-box; /* considera padding e border no tamanho total */
 }
 
-.event-create-container input[type="text"],
-.event-create-container input[type="datetime-local"],
+.event-create-container input[type='text'],
+.event-create-container input[type='datetime-local'],
 .event-create-container button {
   margin: 5px 0;
   padding: 10px 0px;
@@ -429,15 +442,13 @@ header {
   width: 100%; /* Ajuste a largura dos campos de input */
 }
 
-.event-create-container input[type="text"],
-.event-create-container input[type="datetime-local"] {
+.event-create-container input[type='text'],
+.event-create-container input[type='datetime-local'] {
   background-color: #f8f8f8;
   color: #333;
   padding-left: 10px; /* Ajuste esse valor conforme necessário */
   box-sizing: border-box; /* Adiciona padding e border na largura total */
-  
 }
-
 
 /* TicketCreate.css */
 
@@ -451,24 +462,23 @@ header {
   box-sizing: border-box; /* inclui padding e border na largura total do elemento */
 }
 
-
-.ticket-create-container h2 {
-  margin-bottom: 10px;
+.ticket-create-container h1 {
+  margin-bottom: 20px;
   font-size: 42px;
 }
 
-.ticket-create-container form {
+.ticket-create-container .ticket-form {
   display: flex;
   width: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px; /* Adiciona espaço entre o formulário e o botão */
 }
 
-.ticket-create-container form div {
+.ticket-create-container .ticket-form div {
   margin-bottom: 10px;
   width: 100%;
-  
 }
 
 .ticket-create-container label {
@@ -480,7 +490,71 @@ header {
   width: 100%;
   box-sizing: border-box;
   padding: 10px; /* Ajuste esse valor conforme necessário */
-  padding-left: 10px; /* Ajuste esse valor conforme necessário */
   border: 1px solid #ccc;
   border-radius: 3px;
+  margin-bottom: 15px; /* Adiciona espaço entre os elementos do formulário */
+}
+
+/* Register.css */
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 27px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+}
+
+.register-form .input-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.register-form .input-group input {
+  width: 48%; /* para os inputs se alinharem corretamente */
+}
+
+.register-form input {
+  background-color: #f2f2f2; /* cinza claro */
+  margin-bottom: 10px; /* espaçamento entre os campos */
+  border: 1px solid #ddd;
+  height: 40px;
+  text-indent: 10px;
+  font-weight: 400;
+}
+
+.register-form input:focus {
+  outline: none;
+}
+
+.register-form button {
+  margin-top: 10px;
+}
+
+.login-separator {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
+
+.register-button {
+  display: block;
+  width: 45%;
+  margin: 0 auto;
+  text-align: center;
+  padding: 10px;
+  background: linear-gradient(rgb(3, 182, 3), rgb(1, 133, 1));
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.register-button:hover {
+  background: linear-gradient(rgb(1, 133, 1), rgb(0, 97, 0));
 }

@@ -1,40 +1,43 @@
-const apiBaseURL = "http://localhost:9000/api/v1/";
+import { BASE_URL } from '../api/apiConfig';
 
-export const getTicket = (id) => {
-  return fetch(`${apiBaseURL}ticket/${id}`, {
-    credentials: 'include',
-  }).then(res => res.json());
+export async function getTickets(eventId) {
+    return fetch(`${BASE_URL}/tickets/?event_id=${eventId}`)
+    .then(res => res.json())
+    .catch(err => console.error(err));
 }
 
-export const getTickets = () => {
-  return fetch(`${apiBaseURL}tickets`, {
-    credentials: 'include',
-  }).then(res => res.json());
+export async function createTicket(event_id, price, is_for_sale) {
+    try {
+        const res = await fetch(`${BASE_URL}/tickets/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({event_id, price, is_for_sale}),
+            credentials: 'include'
+        })
+    
+        const data = await res.json();
+        
+        if (!res.ok) {
+            throw {
+                message: data.detail,
+                statusText: res.statusText,
+                status: res.status
+            }
+        }
+        return data;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 
-export const createTicket = async (ticket) => {
-  const res = await fetch(`${apiBaseURL}tickets`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(ticket),
-    credentials: 'include'
-  });
-  return await res.json();
-}
-
-export const updateTicket = (id, ticket) => {
-  return fetch(`${apiBaseURL}tickets/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(ticket),
-    credentials: 'include',
-  }).then(res => res.json());
-}
-
-export const deleteTicket = (id) => {
-  return fetch(`${apiBaseURL}tickets/${id}`, {
-    method: 'DELETE',
-    credentials: 'include',
-  }).then(res => res.json());
-}
+// const response = await fetch(`${BASE_URL}/tickets/`, {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify(ticketData),
+    //       credentials: 'include'
+    //     });
