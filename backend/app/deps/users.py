@@ -21,7 +21,7 @@ cookie_transport = CookieTransport(
     cookie_name='cookie-ticket',
     cookie_secure=True,
     cookie_samesite='none',
-    cookie_httponly=False
+    cookie_httponly=True
 )
 
 def get_jwt_strategy() -> JWTStrategy:

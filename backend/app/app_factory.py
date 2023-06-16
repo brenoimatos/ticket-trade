@@ -54,6 +54,11 @@ class AppFactory:
             prefix=f"{self.config.API_PATH}/auth",
             tags=["auth"],
         )
+        # self.app.include_router(
+        #     fastapi_users_obj.get_verify_router(UserRead),
+        #     prefix=f"{self.config.API_PATH}/auth",
+        #     tags=["auth"],
+        # )
         self.app.include_router(
             fastapi_users_obj.get_users_router(UserRead, UserUpdate, requires_verification=False),
             prefix=f"{self.config.API_PATH}/users",
@@ -81,7 +86,7 @@ class AppFactory:
                 CORSMiddleware,
                 allow_origins=[str(origin) for origin in self.config.BACKEND_CORS_ORIGINS],
                 allow_credentials=True,
-                allow_methods=["POST", "GET"],
+                allow_methods=["POST", "GET", "DELETE"],
                 expose_headers=["Content-Range", "Range", "Access-Control-Allow-Credentials"],
                 allow_headers=["Authorization", "Range", "Content-Range", "Access-Control-Allow-Credentials"],
             )

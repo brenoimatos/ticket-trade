@@ -1,34 +1,20 @@
 // Header.js
 import React from 'react'
-import {
-  NavLink,
-  useActionData,
-  useLoaderData,
-  useFetcher,
-} from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import logoImage from '../assets/banca_logo.png' // Importe a imagem do logo
-import { useState, useEffect } from 'react'
-import { redirect } from 'react-router-dom'
-
-// This is an assumed function which will need to be replaced with actual authentication check
-const isUserAuthenticated = () => {
-  // Replace this with your actual authentication check
-  const cookie = document.cookie
-    .split('; ')
-    .find((row) => row.startsWith('cookie-ticket'))
-  console.log('cookie', cookie)
-  return cookie ? true : false
-}
+import { useAuth } from '../hooks/useAuth'
+import { logout as logoutApi } from '../api/auth'
 
 function Header() {
-  const fetcher = useFetcher()
-  const cookieAuth = useLoaderData(isUserAuthenticated, [])
+  const { user, logout } = useAuth()
+  console.log('HeaderUser', user)
 
-  const logout = async () => {
+  const handleLogout = async () => {
     // You may need to send a request to the server to invalidate the session/cookie here
-    await fetcher.submit({ method: 'post', action: '/api/logout' })
-    document.cookie =
-      'cookie-ticket=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+    const data = await logoutApi()
+    console.log('data logout', data)
+    logout()
+    return null
   }
 
   return (
@@ -40,7 +26,7 @@ function Header() {
           </NavLink>
         </div>
         <div className="nav-links">
-          {!cookieAuth && (
+          {!user && (
             <NavLink
               to="/login"
               className={(navData) => (navData.isActive ? 'active' : 'none')}
@@ -48,11 +34,10 @@ function Header() {
               Login
             </NavLink>
           )}
-          {cookieAuth && (
+          {user && (
             <NavLink
-              to="/login"
-              className={(navData) => (navData.isActive ? 'active' : 'none')}
-              onClick={logout}
+              className={(navData) => (navData.isActive ? 'none' : 'none')}
+              onClick={handleLogout}
             >
               Logout
             </NavLink>

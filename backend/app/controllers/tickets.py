@@ -52,3 +52,22 @@ async def read_tickets(
         "Content-Range"
     ] = f"{request_params.skip}-{request_params.skip + len(tickets)}/{total}"
     return tickets
+
+@router.delete("/{id}", response_model=TicketSchema)
+async def delete_ticket(
+    id: int,
+    session: AsyncSession = Depends(get_async_session),
+    user: User = Depends(current_user)
+) -> Any:
+    ticket = await session.get(TicketModel, id)
+    
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+
+    if ticket.user_id != user.id:
+        raise HTTPException(status_code=403, detail="Not enough permissions")
+
+    await session.delete(ticket)
+    await session.commit()
+
+    return ticket

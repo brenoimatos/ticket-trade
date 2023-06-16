@@ -12,7 +12,7 @@ export async function action({ request }) {
   const phone = formData.get('phone')
 
   try {
-    const data = await register(email, password, first_name, last_name, phone)
+    await register(email, password, first_name, last_name, phone)
     return redirect('/login')
   } catch (err) {
     return JSON.stringify(err.message)

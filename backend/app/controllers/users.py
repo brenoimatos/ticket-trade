@@ -8,7 +8,7 @@ from sqlalchemy.orm import selectinload
 from starlette.responses import Response
 
 from app.deps.db import get_async_session
-from app.deps.users import current_superuser
+from app.deps.users import current_superuser, current_user
 from app.dto.user import UserCreate, UserRead
 from app.models.user import User
 
@@ -27,7 +27,11 @@ async def get_users(
     users = (
         (await session.execute(select(User).offset(skip).limit(limit))).scalars().unique().all()
     )
-
-
     response.headers["Content-Range"] = f"{skip}-{skip + len(users)}/{total}"
     return users
+
+@router.get("/users/validate", response_model=bool)
+async def get_user_validation(
+    _: User = Depends(current_user),
+) -> Any:
+    return True

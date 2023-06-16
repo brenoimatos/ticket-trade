@@ -2,14 +2,19 @@
 import React from 'react'
 import TicketList from '../components/TicketList'
 import EventDetail from '../components/EventDetail'
-import { getEventById } from '../api/events'
-import { getTickets } from '../api/tickets'
+import api from '../api'
 
 export async function loader({ params }) {
   return {
-    events: await getEventById(params.eventId),
-    tickets: await getTickets(params.eventId),
+    events: await api.getEventById(params.eventId),
+    tickets: await api.getTickets(params.eventId),
   }
+}
+
+export const action = async ({ request }) => {
+  const formData = await request.formData()
+  const id = formData.get('ticketId')
+  return await api.deleteTicket(id)
 }
 
 function Tickets() {

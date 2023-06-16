@@ -10,7 +10,7 @@ export async function action({ params, request }) {
   const price = formData.get('price')
   const isForSale = formData.get('transactionType') === 'venda' ? true : false
   try {
-    const data = await createTicket(eventId, price, isForSale)
+    await createTicket(eventId, price, isForSale)
     return redirect(`/events/${eventId}`)
   } catch (err) {
     return err.message

@@ -1,5 +1,6 @@
 import queryString from 'query-string'
 import { redirect } from 'react-router-dom'
+import { validateUser } from './users'
 
 const apiBaseURL = 'http://localhost:9000/api/v1/'
 
@@ -18,14 +19,16 @@ export const login = async (username, password) => {
       status: res.status,
     }
   }
-  return console.log('Logged on')
+  return null
 }
 
-export const logout = () => {
-  return fetch(`${apiBaseURL}auth/jwt/logout`, {
+export const logout = async () => {
+  const res = await fetch(`${apiBaseURL}auth/jwt/logout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-  }).then((res) => res.json())
+    credentials: 'include',
+  })
+  return res
 }
 
 export const register = async (
@@ -61,26 +64,14 @@ export const register = async (
   return console.log('Registered')
 }
 
-export async function getCookieAuth() {
-  const cookie = document.cookie
-    .split('; ')
-    .filter((row) => row.startsWith('cookie-ticket='))
-    .map((c) => c.split('=')[1])[0]
-  return cookie
-}
-
 export async function requireAuth(request) {
   const pathname = new URL(request.url).pathname
-  const cookieAuth = getCookieAuth()
-  if (!cookieAuth) {
+  const isUserValid = await validateUser()
+  console.log('isUserValid', isUserValid)
+  if (!isUserValid) {
     throw redirect(
-      `/login?message=You must log in first.&redirectTo=${pathname}`
+      `/login?message=Você precisa estar logado para acessar esta página.&redirectTo=${pathname}`
     )
   }
   return null
-}
-
-export async function requireAuthCookie() {
-  const cookieAuth = getCookieAuth()
-  return cookieAuth
 }
