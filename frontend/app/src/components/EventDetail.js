@@ -1,8 +1,7 @@
 import { useLoaderData } from 'react-router-dom'
 
 function EventDetail() {
-  const { events } = useLoaderData()
-  const event = events[0]
+  const { event } = useLoaderData()
 
   const formatDate = (dateString) => {
     const options = {

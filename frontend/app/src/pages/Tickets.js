@@ -7,7 +7,7 @@ import { requireAuth } from '../api/auth'
 
 export async function loader({ params }) {
   return {
-    events: await api.getEventById(params.eventId),
+    event: await api.getEventById(params.eventId),
     tickets: await api.getTickets(params.eventId),
   }
 }

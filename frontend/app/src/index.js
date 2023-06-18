@@ -23,7 +23,9 @@ import Login, {
 } from './pages/Login'
 import { requireAuth } from './api/auth'
 import Register, { action as registerAction } from './pages/Register'
-import TicketDetail from './pages/TicketDetail'
+import TicketDetail, {
+  loader as ticketDetailLoader,
+} from './pages/TicketDetail'
 
 export default function App() {
   const router = createBrowserRouter(
@@ -38,27 +40,27 @@ export default function App() {
         />
         <Route path="register" element={<Register />} action={registerAction} />
         <Route
-          path="events/:eventId"
+          path="events/create"
+          element={<EventCreate />}
+          loader={async ({ request }) => await requireAuth(request)}
+          action={eventCreateAction}
+        />
+        <Route
+          path="events/:eventId/tickets"
           element={<Tickets />}
           loader={ticketLoader}
           action={ticketAction}
         />
         <Route
-          path="events/:eventId/create-ticket"
+          path="events/:eventId/tickets/create"
           element={<TicketCreate />}
           loader={async ({ request }) => await requireAuth(request)}
           action={ticketCreateAction}
         />
         <Route
-          path="tickets/:ticketId"
+          path="events/:eventId/tickets/:ticketId"
           element={<TicketDetail />}
-          loader={async ({ request }) => await requireAuth(request)}
-        />
-        <Route
-          path="events/create"
-          element={<EventCreate />}
-          loader={async ({ request }) => await requireAuth(request)}
-          action={eventCreateAction}
+          loader={ticketDetailLoader}
         />
       </Route>
     )

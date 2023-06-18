@@ -1,5 +1,5 @@
 // TicketList.js
-import { Link, useLoaderData, Form } from 'react-router-dom'
+import { Link, useLoaderData, Form, useParams } from 'react-router-dom'
 import moment from 'moment'
 import Modal from 'react-modal'
 import { useState } from 'react'
@@ -9,6 +9,7 @@ Modal.setAppElement('#root')
 
 function TicketList() {
   const [user, setUser] = useLocalStorage('user', null)
+  const { eventId } = useParams()
   const { tickets } = useLoaderData()
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [ticketIdToDelete, setTicketIdToDelete] = useState(null)
@@ -28,7 +29,7 @@ function TicketList() {
       .filter((ticket) => ticket.is_for_sale === isForSale)
       .map((ticket) => (
         <Link
-          to={`/tickets/${ticket.id}`}
+          to={`/events/${eventId}/tickets/${ticket.id}`}
           state={{ ticket: ticket }}
           className="ticket-card"
           key={ticket.id}
@@ -63,7 +64,7 @@ function TicketList() {
   function CreateTicketButton() {
     return (
       <div className="create-ticket">
-        <Link to="create-ticket" className="custom-link-button">
+        <Link to="create" className="custom-link-button">
           Criar oferta de venda ou compra
         </Link>
       </div>

@@ -1,4 +1,9 @@
-import { getTickets, createTicket, deleteTicket } from './tickets'
+import {
+  getTickets,
+  getTicketById,
+  createTicket,
+  deleteTicket,
+} from './tickets'
 import {
   getMyUser,
   updateUser,
@@ -11,6 +16,7 @@ import { logout, login } from './auth'
 
 export default {
   getTickets,
+  getTicketById,
   createTicket,
   deleteTicket,
   getUserById,

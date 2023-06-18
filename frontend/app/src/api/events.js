@@ -3,6 +3,7 @@ import { BASE_URL } from '../api/apiConfig'
 export async function getEventById(eventId) {
   return fetch(`${BASE_URL}/events/?event_id=${eventId}`)
     .then((res) => res.json())
+    .then((data) => data[0])
     .catch((err) => console.error(err))
 }
 

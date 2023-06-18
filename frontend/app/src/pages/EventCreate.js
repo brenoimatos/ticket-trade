@@ -10,7 +10,7 @@ export async function action({ request }) {
   const ticket_url = formData.get('ticket_url')
   try {
     const data = await createEvent({ name, location, date, ticket_url })
-    return redirect(`/events/${data.id}`)
+    return redirect(`/events/${data.id}/tickets`)
   } catch (err) {
     return err.message
   }

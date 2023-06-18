@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select
@@ -69,26 +69,34 @@ async def read_tickets(
     ] = f"{request_params.skip}-{request_params.skip + len(tickets)}/{total}"
     return tickets
 
+
+
 @router.get("/info", response_model=List[TicketInfo])
 async def read_tickets_info(
     response: Response,
-    event_id: int,
+    event_id: Optional[int] = None,
+    ticket_id: Optional[int] = None,
     session: AsyncSession = Depends(get_async_session),
     request_params: RequestParams = Depends(parse_react_admin_params(TicketModel)),
 ) -> Any:
     total = await session.scalar(
         select(func.count(TicketModel.id))
     )
+    tickets_query = select(TicketModel)
+
+    if event_id is not None:
+        tickets_query = tickets_query.where(TicketModel.event_id == event_id)
+    if ticket_id is not None:
+        tickets_query = tickets_query.where(TicketModel.id == ticket_id)
+
     tickets_query = (
-        select(TicketModel)
-        .where(TicketModel.event_id == event_id)
-        .where(TicketModel.is_sold == False)
+        tickets_query.where(TicketModel.is_sold == False)
         .offset(request_params.skip)
         .limit(request_params.limit)
         .order_by(request_params.order_by)
         .options(joinedload(TicketModel.user))
     )
-
+    
     tickets = (
         await session.execute(tickets_query)
     ).unique().scalars().all()
@@ -96,6 +104,7 @@ async def read_tickets_info(
         "Content-Range"
     ] = f"{request_params.skip}-{request_params.skip + len(tickets)}/{total}"
     return tickets
+
 
 @router.delete("/{id}", response_model=TicketSchema)
 async def delete_ticket(

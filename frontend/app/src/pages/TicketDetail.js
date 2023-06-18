@@ -1,11 +1,19 @@
 // TicketDetail.js
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLoaderData } from 'react-router-dom'
+import { requireAuth } from '../api/auth'
+import api from '../api'
+
+export async function loader({ params, request }) {
+  await requireAuth(request)
+  return {
+    event: await api.getEventById(params.eventId),
+    ticket: await api.getTicketById(params.ticketId),
+  }
+}
 
 function TicketDetail() {
-  const { state } = useLocation()
-  console.log('state ticket', state.ticket)
-  const { ticket } = state
+  const { event, ticket } = useLoaderData()
 
   return (
     <div className="ticket-detail-container">
