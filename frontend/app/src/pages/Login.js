@@ -22,11 +22,10 @@ export async function action({ request }) {
   const pathname = new URL(request.url).searchParams.get('redirectTo') || '/'
   try {
     await api.login(email, password)
-    const key = 'user'
     const myUser = await api.getMyUser()
-    console.log(myUser)
+    const key = 'user'
     const newValue = JSON.stringify(myUser.id)
-    localStorage.setItem(key, myUser.id)
+    localStorage.setItem(key, newValue)
     publishEvent('login', { key, newValue })
     return redirect(pathname)
   } catch (err) {
