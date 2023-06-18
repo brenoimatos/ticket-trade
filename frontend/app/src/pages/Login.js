@@ -1,46 +1,44 @@
-import { login as loginApi } from '../api/auth'
-import React from 'react'
-import { useAuth } from '../hooks/useAuth'
+import React, { useEffect, useState } from 'react'
+import api from '../api'
 import {
   useLoaderData,
   useNavigation,
   Form,
-  redirect,
   useActionData,
   Link,
   Navigate,
+  redirect,
 } from 'react-router-dom'
+import { publishEvent } from '../hooks/customEvent'
 
 export function loader({ request }) {
   return new URL(request.url).searchParams.get('message')
 }
 
-export const action = function (login) {
-  return async function ({ request }) {
-    const formData = await request.formData()
-    const email = formData.get('email')
-    const password = formData.get('password')
-    const pathname = new URL(request.url).searchParams.get('redirectTo') || '/'
-
-    try {
-      await loginApi(email, password)
-      await login()
-      return redirect(pathname)
-    } catch (err) {
-      return err.message
-    }
+export async function action({ request }) {
+  const formData = await request.formData()
+  const email = formData.get('email')
+  const password = formData.get('password')
+  const pathname = new URL(request.url).searchParams.get('redirectTo') || '/'
+  try {
+    await api.login(email, password)
+    const key = 'user'
+    const myUser = await api.getMyUser()
+    console.log(myUser)
+    const newValue = JSON.stringify(myUser.id)
+    localStorage.setItem(key, myUser.id)
+    publishEvent('login', { key, newValue })
+    return redirect(pathname)
+  } catch (err) {
+    return err.message
   }
 }
 
 export default function Login() {
-  const { user } = useAuth()
-
   const errorMessage = useActionData()
   const message = useLoaderData()
   const navigation = useNavigation()
-  if (user) {
-    return <Navigate to={'/'} />
-  }
+
   return (
     <div className="login-container">
       <h1>Conecte-se com sua conta</h1>

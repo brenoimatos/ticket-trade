@@ -1,18 +1,17 @@
 // TicketList.js
-import { Link, useLoaderData, Form, useNavigation } from 'react-router-dom'
+import { Link, useLoaderData, Form } from 'react-router-dom'
 import moment from 'moment'
-import { useAuth } from '../hooks/useAuth'
 import Modal from 'react-modal'
 import { useState } from 'react'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 Modal.setAppElement('#root')
 
 function TicketList() {
-  const { user } = useAuth()
+  const [user, setUser] = useLocalStorage('user', null)
   const { tickets } = useLoaderData()
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [ticketIdToDelete, setTicketIdToDelete] = useState(null)
-  const navigation = useNavigation()
 
   const openModal = (ticketId) => {
     setModalIsOpen(true)
@@ -30,11 +29,15 @@ function TicketList() {
       .map((ticket) => (
         <Link
           to={`/tickets/${ticket.id}`}
+          state={{ ticket: ticket }}
           className="ticket-card"
           key={ticket.id}
         >
           <div>
             <h3>R$ {ticket.price.toFixed(0)}</h3>
+            <h5>
+              {ticket.user.first_name} {ticket.user.last_name}
+            </h5>{' '}
             <small>
               Última atualização:{' '}
               {moment(ticket.updated_at).format('HH:mm [de] DD/MM/YYYY')}
@@ -42,7 +45,7 @@ function TicketList() {
           </div>
           <div className="card-actions">
             {/* Apenas mostrar o botão de delete se o usuário é o dono do ticket */}
-            {ticket.user_id === user && (
+            {ticket.user.id === user && (
               <button
                 onClick={(event) => {
                   event.stopPropagation()

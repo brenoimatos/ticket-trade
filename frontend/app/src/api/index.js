@@ -7,6 +7,7 @@ import {
   getUserById,
 } from './users'
 import { getEventById, createEvent } from './events'
+import { logout, login } from './auth'
 
 export default {
   getTickets,
@@ -19,4 +20,6 @@ export default {
   deleteUser,
   getEventById,
   createEvent,
+  logout,
+  login,
 }

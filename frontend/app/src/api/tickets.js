@@ -1,7 +1,7 @@
 import { BASE_URL } from '../api/apiConfig'
 
 export async function getTickets(eventId) {
-  return fetch(`${BASE_URL}/tickets/?event_id=${eventId}`)
+  return fetch(`${BASE_URL}/tickets/info?event_id=${eventId}`)
     .then((res) => res.json())
     .catch((err) => console.error(err))
 }
@@ -20,7 +20,7 @@ export async function createTicket(event_id, price, is_for_sale) {
 
   if (!res.ok) {
     throw {
-      message: data.detail,
+      message: data.detail || 'An error occurred while creating the ticket.',
       statusText: res.statusText,
       status: res.status,
     }

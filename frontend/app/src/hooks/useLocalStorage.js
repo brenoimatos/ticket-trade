@@ -1,37 +1,55 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { subscribeToEvent, unsubscribeToEvent } from './customEvent'
 
-export const useLocalStorage = (keyName, defaultValue) => {
-  const [storedValue, setStoredValue] = useState(() => {
+export function useLocalStorage(key, defaultValue) {
+  const prevKeyRef = useRef(key)
+  const [value, setValue] = useState(() => {
+    const storedValue = localStorage.getItem(key)
+
+    if (storedValue === null) {
+      return defaultValue
+    }
+
     try {
-      const value = window.localStorage.getItem(keyName)
-
-      if (value) {
-        return JSON.parse(value)
-      } else {
-        window.localStorage.setItem(keyName, JSON.stringify(defaultValue))
-        return defaultValue
-      }
-    } catch (err) {
+      const parsedValue = JSON.parse(storedValue)
+      return parsedValue
+    } catch {
       return defaultValue
     }
   })
 
-  const setValue = (newValue) => {
-    try {
-      window.localStorage.setItem(keyName, JSON.stringify(newValue))
-    } catch (err) {}
-    setStoredValue(newValue)
-  }
+  useEffect(() => {
+    const currentKey = prevKeyRef.current
 
-  return [storedValue, setValue]
-}
+    if (currentKey !== key) {
+      localStorage.removeItem(currentKey)
+    }
 
-export const getFromLocalStorage = (keyName) => {
-  const value = window.localStorage.getItem(`${keyName}`)
+    prevKeyRef.current = key
 
-  if (value !== 'undefined' && value !== null) {
-    return JSON.parse(value)
-  }
+    localStorage.setItem(key, JSON.stringify(value))
+  }, [key, prevKeyRef, value])
 
-  return
+  useEffect(() => {
+    const handleEvent = (event) => {
+      const key = event.key || event.detail.key
+      const newValue = event.newValue || event.detail.newValue
+
+      if (key === prevKeyRef.current) {
+        setValue(JSON.parse(newValue))
+      }
+    }
+
+    subscribeToEvent('login', handleEvent)
+    window.addEventListener('storage', handleEvent)
+
+    return () => {
+      unsubscribeToEvent('login', handleEvent)
+      window.removeEventListener('storage', handleEvent)
+    }
+  }, [prevKeyRef])
+
+  const tuple = useMemo(() => [value, setValue], [value])
+
+  return tuple
 }

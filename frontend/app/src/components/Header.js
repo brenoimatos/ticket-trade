@@ -2,18 +2,17 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import logoImage from '../assets/banca_logo.png' // Importe a imagem do logo
-import { useAuth } from '../hooks/useAuth'
-import { logout as logoutApi } from '../api/auth'
+import api from '../api'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 
 function Header() {
-  const { user, logout } = useAuth()
-  console.log('HeaderUser', user)
+  const [user, setUser] = useLocalStorage('user', null)
 
   const handleLogout = async () => {
     // You may need to send a request to the server to invalidate the session/cookie here
-    const data = await logoutApi()
+    const data = await api.logout()
+    setUser(null)
     console.log('data logout', data)
-    logout()
     return null
   }
 

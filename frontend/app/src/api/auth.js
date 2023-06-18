@@ -69,6 +69,7 @@ export async function requireAuth(request) {
   const isUserValid = await validateUser()
   console.log('isUserValid', isUserValid)
   if (!isUserValid) {
+    console.log('UserNoTValid')
     throw redirect(
       `/login?message=Você precisa estar logado para acessar esta página.&redirectTo=${pathname}`
     )

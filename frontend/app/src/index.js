@@ -17,19 +17,15 @@ import EventCreate, { action as eventCreateAction } from './pages/EventCreate'
 import TicketCreate, {
   action as ticketCreateAction,
 } from './pages/TicketCreate'
-import { getFromLocalStorage } from './hooks/useLocalStorage'
 import Login, {
   loader as loginLoader,
   action as loginAction,
 } from './pages/Login'
 import { requireAuth } from './api/auth'
 import Register, { action as registerAction } from './pages/Register'
-import { AuthProvider, useAuth } from './hooks/useAuth'
 import TicketDetail from './pages/TicketDetail'
 
 export default function App() {
-  const { login, user } = useAuth()
-  console.log('index user', user)
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Layout />}>
@@ -38,7 +34,7 @@ export default function App() {
           path="login"
           element={<Login />}
           loader={loginLoader}
-          action={loginAction(login)}
+          action={loginAction}
         />
         <Route path="register" element={<Register />} action={registerAction} />
         <Route
@@ -50,14 +46,18 @@ export default function App() {
         <Route
           path="events/:eventId/create-ticket"
           element={<TicketCreate />}
-          loader={async ({ request }) => await requireAuth(request, user)}
+          loader={async ({ request }) => await requireAuth(request)}
           action={ticketCreateAction}
         />
-        <Route path="tickets/:ticketId" element={<TicketDetail />} />
+        <Route
+          path="tickets/:ticketId"
+          element={<TicketDetail />}
+          loader={async ({ request }) => await requireAuth(request)}
+        />
         <Route
           path="events/create"
           element={<EventCreate />}
-          loader={async ({ request }) => await requireAuth(request, user)}
+          loader={async ({ request }) => await requireAuth(request)}
           action={eventCreateAction}
         />
       </Route>
@@ -65,12 +65,9 @@ export default function App() {
   )
   return <RouterProvider router={router} />
 }
-const userData = getFromLocalStorage('user')
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider storedUserData={userData}>
-      <App />
-    </AuthProvider>
+    <App />
   </React.StrictMode>
 )
