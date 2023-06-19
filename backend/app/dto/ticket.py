@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -10,6 +11,7 @@ class TicketCreate(BaseModel):
     event_id: int
     price: int
     is_for_sale: bool
+    description: Optional[str] = None
     
 class Ticket(TicketCreate):
     id: int

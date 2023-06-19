@@ -25,6 +25,7 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
     first_name: Mapped[str]
     last_name: Mapped[str]
     phone: Mapped[BigInteger] = mapped_column(BigInteger, unique=True)
+    avatar: Mapped[str] = mapped_column(nullable=True)
 
     # OAuth accounts
     oauth_accounts: Mapped[list[OAuthAccount]] = relationship("OAuthAccount", lazy="joined")
@@ -45,5 +46,3 @@ class User(SQLAlchemyBaseUserTableUUID, Base):
 
     events: Mapped[list["Event"]] = relationship("Event", back_populates="user")
 
-    def __repr__(self):
-        return f"User(id={self.id!r}, name={self.email!r})"

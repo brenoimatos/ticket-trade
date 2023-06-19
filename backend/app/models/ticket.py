@@ -21,6 +21,7 @@ class Ticket(Base):
     price: Mapped[int]
     is_for_sale: Mapped[bool] = mapped_column(default=True)
     is_sold: Mapped[bool] = mapped_column(default=False)
+    description: Mapped[str] = mapped_column(nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)

@@ -19,7 +19,9 @@ class UserUpdate(schemas.BaseUserUpdate):
     first_name: Optional[str]
     last_name: Optional[str]
     phone: Optional[int]
+    avatar: Optional[str]
 
 class UserRead(UserBase):
     created_at: datetime
     updated_at: datetime
+    avatar: Optional[str]
