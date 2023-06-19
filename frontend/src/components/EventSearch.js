@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BASE_URL } from '../api/apiConfig';
+import { apiBaseUrl } from '../api/apiConfig';
 import EventList from './EventList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -19,7 +19,7 @@ function EventSearch() {
 
   useEffect(() => {
     if (debouncedSearchTerm.length >= 2 || debouncedSearchTerm.length === 0) {
-      fetch(`${BASE_URL}/events/?search=${debouncedSearchTerm}&sort=["name", "ASC"]&range=[0, 5]`)
+      fetch(`${apiBaseUrl}/events/?search=${debouncedSearchTerm}&sort=["name", "ASC"]&range=[0, 5]`)
         .then(res => res.json())
         .then(data => setSearchResults(data))
         .catch(err => console.error(err));

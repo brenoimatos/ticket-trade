@@ -1,20 +1,20 @@
-import { BASE_URL } from '../api/apiConfig'
+import { apiBaseUrl } from "./apiConfig"
 
 export async function getTickets(eventId) {
-  return fetch(`${BASE_URL}/tickets/info?event_id=${eventId}`)
+  return fetch(`${apiBaseUrl}/tickets/info?event_id=${eventId}`)
     .then((res) => res.json())
     .catch((err) => console.error(err))
 }
 
 export async function getTicketById(ticketId) {
-  return fetch(`${BASE_URL}/tickets/info?ticket_id=${ticketId}`)
+  return fetch(`${apiBaseUrl}/tickets/info?ticket_id=${ticketId}`)
     .then((res) => res.json())
     .then((data) => data[0])
     .catch((err) => console.error(err))
 }
 
 export async function createTicket(event_id, price, is_for_sale) {
-  const res = await fetch(`${BASE_URL}/tickets/`, {
+  const res = await fetch(`${apiBaseUrl}/tickets/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export async function createTicket(event_id, price, is_for_sale) {
 
 export const deleteTicket = async (id) => {
   try {
-    const response = await fetch(`${BASE_URL}/tickets/${id}`, {
+    const response = await fetch(`${apiBaseUrl}/tickets/${id}`, {
       method: 'DELETE',
       credentials: 'include',
     })

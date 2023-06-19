@@ -1,17 +1,17 @@
-const apiBaseURL = 'http://localhost:9000/api/v1/'
+import { apiBaseUrl } from "./apiConfig"
 
 export const getUserById = async (id) => {
-  const res = await fetch(`${apiBaseURL}users/${id}`)
+  const res = await fetch(`${apiBaseUrl}users/${id}`)
   return await res.json()
 }
 
 export const getMyUser = async () => {
-  const res = await fetch(`${apiBaseURL}users/me`, { credentials: 'include' })
+  const res = await fetch(`${apiBaseUrl}users/me`, { credentials: 'include' })
   return res.json()
 }
 
 export async function validateUser() {
-  return fetch(`${apiBaseURL}users/validate`, {
+  return fetch(`${apiBaseUrl}users/validate`, {
     credentials: 'include',
   })
     .then((res) => {
@@ -24,7 +24,7 @@ export async function validateUser() {
 }
 
 export const updateUser = async (id, user) => {
-  const res = await fetch(`${apiBaseURL}users/${id}`, {
+  const res = await fetch(`${apiBaseUrl}users/${id}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user),
@@ -33,7 +33,7 @@ export const updateUser = async (id, user) => {
 }
 
 export const deleteUser = async (id) => {
-  const res = await fetch(`${apiBaseURL}users/${id}`, {
+  const res = await fetch(`${apiBaseUrl}users/${id}`, {
     method: 'DELETE',
   })
   return await res.json()

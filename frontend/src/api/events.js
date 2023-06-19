@@ -1,14 +1,14 @@
-import { BASE_URL } from '../api/apiConfig'
+import { apiBaseUrl } from "./apiConfig"
 
 export async function getEventById(eventId) {
-  return fetch(`${BASE_URL}/events/?event_id=${eventId}`)
+  return fetch(`${apiBaseUrl}/events/?event_id=${eventId}`)
     .then((res) => res.json())
     .then((data) => data[0])
     .catch((err) => console.error(err))
 }
 
 export async function createEvent(eventData) {
-  const res = await fetch(`${BASE_URL}/events/`, {
+  const res = await fetch(`${apiBaseUrl}/events/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -141,3 +141,6 @@ dmypy.json
 
 # SonarCloud
 .scannerwork
+
+# pem key pair aws
+*.pem
