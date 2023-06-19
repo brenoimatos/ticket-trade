@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from typing import Optional
 
 from fastapi_users import schemas
@@ -20,4 +21,5 @@ class UserUpdate(schemas.BaseUserUpdate):
     phone: Optional[int]
 
 class UserRead(UserBase):
-    pass
+    created_at: datetime
+    updated_at: datetime

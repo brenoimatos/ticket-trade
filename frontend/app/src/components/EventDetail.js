@@ -1,4 +1,12 @@
 import { useLoaderData } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
+import api from '../api'
+
+export async function loader({ params }) {
+  return {
+    event: await api.getEventById(params.eventId),
+  }
+}
 
 function EventDetail() {
   const { event } = useLoaderData()
@@ -21,20 +29,25 @@ function EventDetail() {
   }
 
   return (
-    <div className="event-detail-card">
-      <h2>{event.name}</h2>
-      <div className="event-details">
-        <div className="event-detail-date">📅 {formatDate(event.date)}</div>
-        <div className="event-detail-location">📍 {event.location}</div>
+    <div>
+      <div className="event-detail-card">
+        <h2>{event.name}</h2>
+        <div className="event-details">
+          <div className="event-detail-date">📅 {formatDate(event.date)}</div>
+          <div className="event-detail-location">📍 {event.location}</div>
+        </div>
+        <a
+          href={formatTicketURL(event.ticket_url)}
+          className="ticket-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Bilheteria Oficial
+        </a>
       </div>
-      <a
-        href={formatTicketURL(event.ticket_url)}
-        className="ticket-link"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Bilheteria Oficial
-      </a>
+      <main>
+        <Outlet />
+      </main>
     </div>
   )
 }

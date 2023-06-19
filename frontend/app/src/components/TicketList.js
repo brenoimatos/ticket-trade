@@ -4,8 +4,23 @@ import moment from 'moment'
 import Modal from 'react-modal'
 import { useState } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import api from '../api'
+import { requireAuth } from '../api/auth'
 
 Modal.setAppElement('#root')
+
+export async function loader({ params }) {
+  return {
+    tickets: await api.getTickets(params.eventId),
+  }
+}
+
+export const action = async ({ request }) => {
+  await requireAuth(request)
+  const formData = await request.formData()
+  const id = formData.get('ticketId')
+  return await api.deleteTicket(id)
+}
 
 function TicketList() {
   const [user, setUser] = useLocalStorage('user', null)

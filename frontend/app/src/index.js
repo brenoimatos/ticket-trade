@@ -8,10 +8,10 @@ import {
   Route,
 } from 'react-router-dom'
 import Home from './pages/Home'
-import Tickets, {
-  loader as ticketLoader,
-  action as ticketAction,
-} from './pages/Tickets'
+import TicketList, {
+  loader as ticketListLoader,
+  action as ticketListAction,
+} from './components/TicketList'
 import Layout from './components/Layout'
 import EventCreate, { action as eventCreateAction } from './pages/EventCreate'
 import TicketCreate, {
@@ -26,6 +26,9 @@ import Register, { action as registerAction } from './pages/Register'
 import TicketDetail, {
   loader as ticketDetailLoader,
 } from './pages/TicketDetail'
+import EventDetail, {
+  loader as eventDetailLoader,
+} from './components/EventDetail'
 
 export default function App() {
   const router = createBrowserRouter(
@@ -47,21 +50,27 @@ export default function App() {
         />
         <Route
           path="events/:eventId/tickets"
-          element={<Tickets />}
-          loader={ticketLoader}
-          action={ticketAction}
-        />
-        <Route
-          path="events/:eventId/tickets/create"
-          element={<TicketCreate />}
-          loader={async ({ request }) => await requireAuth(request)}
-          action={ticketCreateAction}
-        />
-        <Route
-          path="events/:eventId/tickets/:ticketId"
-          element={<TicketDetail />}
-          loader={ticketDetailLoader}
-        />
+          element={<EventDetail />}
+          loader={eventDetailLoader}
+        >
+          <Route
+            index
+            element={<TicketList />}
+            loader={ticketListLoader}
+            action={ticketListAction}
+          />
+          <Route
+            path="create"
+            element={<TicketCreate />}
+            loader={async ({ request }) => await requireAuth(request)}
+            action={ticketCreateAction}
+          />
+          <Route
+            path=":ticketId"
+            element={<TicketDetail />}
+            loader={ticketDetailLoader}
+          />
+        </Route>
       </Route>
     )
   )
