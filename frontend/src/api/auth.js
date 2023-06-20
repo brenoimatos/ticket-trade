@@ -5,7 +5,7 @@ import { apiBaseUrl } from './apiConfig'
 
 
 export const login = async (username, password) => {
-  const res = await fetch(`${apiBaseUrl}auth/jwt/login`, {
+  const res = await fetch(`${apiBaseUrl}/auth/jwt/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: queryString.stringify({ username, password }),
@@ -23,7 +23,7 @@ export const login = async (username, password) => {
 }
 
 export const logout = async () => {
-  const res = await fetch(`${apiBaseUrl}auth/jwt/logout`, {
+  const res = await fetch(`${apiBaseUrl}/auth/jwt/logout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -40,7 +40,7 @@ export const register = async (
 ) => {
   const phone = Number(raw_phone.replace(/\D/g, ''))
   console.log(email, password, first_name, last_name, phone)
-  const res = await fetch(`${apiBaseUrl}auth/register`, {
+  const res = await fetch(`${apiBaseUrl}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

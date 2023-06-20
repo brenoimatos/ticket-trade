@@ -1,7 +1,7 @@
 import sys
 from typing import Any, Dict, List, Optional
 
-from pydantic import AnyHttpUrl, BaseSettings, HttpUrl, PostgresDsn, validator
+from pydantic import AnyHttpUrl, BaseSettings, PostgresDsn, validator
 
 
 class Settings(BaseSettings):
@@ -13,11 +13,12 @@ class Settings(BaseSettings):
 
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = ["http://localhost:3000/", "http://localhost:3000"]
     TEST_DATABASE_URL: Optional[PostgresDsn]
-    DATABASE_URL: PostgresDsn = "postgresql://postgres:postgres@localhost:5432/db_fastapi"
+    DATABASE_URL: PostgresDsn
     ASYNC_DATABASE_URL: Optional[PostgresDsn]
-    GOOGLE_CLIENT_ID = "602426490845-9jjid9ons5i52f7tb5p7pghfb627294v.apps.googleusercontent.com"
-    GOOGLE_CLIENT_SECRET = "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"
-    GOOGLE_STATE_SECRET = "d2a0bbed93d3caf52848430c7286bASDA1_@3e1490cfe1415334946f54600309c4b4eca"
+    USERS_SECRET_KEY: str
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLIENT_SECRET: str
+    GOOGLE_STATE_SECRET: str
 
     @validator("DATABASE_URL", pre=True)
     def build_test_database_url(cls, v: Optional[str], values: Dict[str, Any]):
@@ -39,7 +40,6 @@ class Settings(BaseSettings):
         v = values["DATABASE_URL"]
         return v.replace("postgresql", "postgresql+asyncpg", 1) if v else v
 
-    SECRET_KEY: str = "SECRET"
     #  END: required environment variables
 
 

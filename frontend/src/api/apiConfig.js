@@ -1,2 +1,2 @@
 // apiConfig.js
-export const apiBaseUrl = '/api/v1/';
+export const apiBaseUrl = '/api/v1';

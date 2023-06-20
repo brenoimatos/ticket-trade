@@ -20,6 +20,10 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - PYTHONPATH=${PYTHONPATH}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_STATE_SECRET=${GOOGLE_STATE_SECRET}
+      - USERS_SECRET_KEY=${USERS_SECRET_KEY}
     depends_on:
       - db
   db:

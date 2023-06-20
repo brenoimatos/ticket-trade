@@ -26,7 +26,7 @@ cookie_transport = CookieTransport(
 
 def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(
-        secret=settings_conf.SECRET_KEY,
+        secret=settings_conf.USERS_SECRET_KEY,
         lifetime_seconds=settings_conf.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
     )
 
@@ -41,8 +41,8 @@ auth_backend = AuthenticationBackend(
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[UserModel, uuid.UUID]):
-    reset_password_token_secret = settings_conf.SECRET_KEY
-    verification_token_secret = settings_conf.SECRET_KEY
+    reset_password_token_secret = settings_conf.USERS_SECRET_KEY
+    verification_token_secret = settings_conf.USERS_SECRET_KEY
 
     # async def on_after_register(self, user: User, request: Optional[Request] = None):
     #     print(f"User {user.id} has registered.")
