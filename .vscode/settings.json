@@ -1,0 +1,38 @@
+{
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        },
+        "Command Prompt": {
+            "path": [
+                "${env:windir}\\Sysnative\\cmd.exe",
+                "${env:windir}\\System32\\cmd.exe"
+            ],
+            "args": [],
+            "icon": "terminal-cmd"
+        },
+        "WSL": {
+            "path": "wsl.exe",
+            "args": [],
+            "icon": "terminal-ubuntu"
+        },
+        "Git Bash": {
+            "path": "C:\\Program Files\\Git\\bin\\bash.exe",
+            "args": [
+                "--login",
+                "-i"
+            ],
+            "icon": "terminal-bash"
+        },
+        "Fish": {
+            "path": "C:\\Windows\\System32\\wsl.exe",
+            "args": [
+                "-e",
+                "fish"
+            ],
+            "icon": "terminal-ubuntu"
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "WSL"
+}
