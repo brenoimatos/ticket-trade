@@ -144,3 +144,6 @@ dmypy.json
 
 # pem key pair aws
 *.pem
+
+# certbot
+*/certbot
