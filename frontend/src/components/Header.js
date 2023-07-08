@@ -5,13 +5,32 @@ import logoImage from '../assets/banca_logo.png' // Importe a imagem do logo
 import api from '../api'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 
+// Avatar component
+function Avatar({ fullName }) {
+  const initials = fullName
+    ?.split(' ')
+    .map((name) => name[0])
+    .join('')
+
+  return (
+    <NavLink to="/perfil" className="avatar">
+      <div className="avatar-container">{initials}</div>
+    </NavLink>
+  )
+}
+
 function Header() {
-  const [user, setUser] = useLocalStorage('user', null)
+  const [userId, setUserId] = useLocalStorage('user', null)
+  const [userFullName, setUserFullName] = useLocalStorage(
+    'user_full_name',
+    null
+  )
 
   const handleLogout = async () => {
     // You may need to send a request to the server to invalidate the session/cookie here
     const data = await api.logout()
-    setUser(null)
+    setUserId(null)
+    setUserFullName(null)
     console.log('data logout', data)
     return null
   }
@@ -25,7 +44,7 @@ function Header() {
           </NavLink>
         </div>
         <div className="nav-links">
-          {!user && (
+          {!userId && (
             <NavLink
               to="/login"
               className={(navData) => (navData.isActive ? 'active' : 'none')}
@@ -33,13 +52,16 @@ function Header() {
               Login
             </NavLink>
           )}
-          {user && (
-            <NavLink
-              className={(navData) => (navData.isActive ? 'none' : 'none')}
-              onClick={handleLogout}
-            >
-              Logout
-            </NavLink>
+          {userId && (
+            <>
+              <Avatar fullName={userFullName} />
+              <NavLink
+                className={(navData) => (navData.isActive ? 'none' : 'none')}
+                onClick={handleLogout}
+              >
+                Logout
+              </NavLink>
+            </>
           )}
         </div>
       </nav>

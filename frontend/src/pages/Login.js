@@ -22,6 +22,11 @@ export async function action({ request }) {
   try {
     await api.login(email, password)
     const myUser = await api.getMyUser()
+    const userFullNameValue = JSON.stringify(
+      myUser.first_name + ' ' + myUser.last_name
+    )
+    localStorage.setItem('user_full_name', userFullNameValue)
+
     const key = 'user'
     const newValue = JSON.stringify(myUser.id)
     localStorage.setItem(key, newValue)
