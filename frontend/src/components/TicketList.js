@@ -61,7 +61,7 @@ function TicketList() {
           </div>
           <div className="card-actions">
             {/* Apenas mostrar o botão de delete se o usuário é o dono do ticket */}
-            {ticket.user.id === user && (
+            {ticket.user.id === user.id && (
               <button
                 onClick={(event) => {
                   event.stopPropagation()

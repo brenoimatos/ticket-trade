@@ -86,7 +86,7 @@ class AppFactory:
                 CORSMiddleware,
                 allow_origins=[str(origin) for origin in self.config.BACKEND_CORS_ORIGINS],
                 allow_credentials=True,
-                allow_methods=["POST", "GET", "DELETE"],
+                allow_methods=["POST", "GET", "DELETE", "PATCH"],
                 expose_headers=["Content-Range", "Range", "Access-Control-Allow-Credentials"],
                 allow_headers=["Authorization", "Range", "Content-Range", "Access-Control-Allow-Credentials"],
             )

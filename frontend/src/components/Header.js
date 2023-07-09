@@ -1,4 +1,3 @@
-// Header.js
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import logoImage from '../assets/banca_logo.png' // Importe a imagem do logo
@@ -7,30 +6,26 @@ import { useLocalStorage } from '../hooks/useLocalStorage'
 
 // Avatar component
 function Avatar({ fullName }) {
+  console.log(fullName)
   const initials = fullName
     ?.split(' ')
     .map((name) => name[0])
     .join('')
 
   return (
-    <NavLink to="/perfil" className="avatar">
+    <NavLink to="/account" className="avatar">
       <div className="avatar-container">{initials}</div>
     </NavLink>
   )
 }
 
 function Header() {
-  const [userId, setUserId] = useLocalStorage('user', null)
-  const [userFullName, setUserFullName] = useLocalStorage(
-    'user_full_name',
-    null
-  )
+  const [user, setUser] = useLocalStorage('user', null)
 
   const handleLogout = async () => {
     // You may need to send a request to the server to invalidate the session/cookie here
     const data = await api.logout()
-    setUserId(null)
-    setUserFullName(null)
+    setUser(null)
     console.log('data logout', data)
     return null
   }
@@ -44,7 +39,7 @@ function Header() {
           </NavLink>
         </div>
         <div className="nav-links">
-          {!userId && (
+          {!user && (
             <NavLink
               to="/login"
               className={(navData) => (navData.isActive ? 'active' : 'none')}
@@ -52,9 +47,9 @@ function Header() {
               Login
             </NavLink>
           )}
-          {userId && (
+          {user && (
             <>
-              <Avatar fullName={userFullName} />
+              <Avatar fullName={user.fullName} />
               <NavLink
                 className={(navData) => (navData.isActive ? 'none' : 'none')}
                 onClick={handleLogout}

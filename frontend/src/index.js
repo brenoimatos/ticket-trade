@@ -29,6 +29,8 @@ import TicketDetail, {
 import EventDetail, {
   loader as eventDetailLoader,
 } from './components/EventDetail'
+import UserProfile from './pages/UserProfile'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function App() {
   const router = createBrowserRouter(
@@ -42,6 +44,7 @@ export default function App() {
           action={loginAction}
         />
         <Route path="register" element={<Register />} action={registerAction} />
+        <Route path="account" element={<UserProfile />} />
         <Route
           path="events/create"
           element={<EventCreate />}

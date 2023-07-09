@@ -22,15 +22,22 @@ export async function action({ request }) {
   try {
     await api.login(email, password)
     const myUser = await api.getMyUser()
-    const userFullNameValue = JSON.stringify(
-      myUser.first_name + ' ' + myUser.last_name
-    )
-    localStorage.setItem('user_full_name', userFullNameValue)
+    const userFullNameValue = myUser.first_name + ' ' + myUser.last_name
 
+    // Criar um objeto para armazenar as informações do usuário
+    const userObject = {
+      id: myUser.id,
+      fullName: userFullNameValue,
+    }
+
+    // Converter o objeto para uma string JSON e armazená-lo no localStorage
     const key = 'user'
-    const newValue = JSON.stringify(myUser.id)
+    const newValue = JSON.stringify(userObject)
     localStorage.setItem(key, newValue)
+
+    // Publicar o objeto completo do usuário
     publishEvent('login', { key, newValue })
+
     return redirect(pathname)
   } catch (err) {
     return err.message
