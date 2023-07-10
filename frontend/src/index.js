@@ -44,7 +44,11 @@ export default function App() {
           action={loginAction}
         />
         <Route path="register" element={<Register />} action={registerAction} />
-        <Route path="account" element={<UserProfile />} />
+        <Route
+          path="account"
+          element={<UserProfile />}
+          loader={async ({ request }) => await requireAuth(request)}
+        />
         <Route
           path="events/create"
           element={<EventCreate />}
