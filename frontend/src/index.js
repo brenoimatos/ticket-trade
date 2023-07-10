@@ -30,7 +30,7 @@ import EventDetail, {
   loader as eventDetailLoader,
 } from './components/EventDetail'
 import UserProfile from './pages/UserProfile'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import { ThemeProvider, createTheme } from '@mui/material'
 
 export default function App() {
   const router = createBrowserRouter(
@@ -80,8 +80,25 @@ export default function App() {
   return <RouterProvider router={router} />
 }
 
+export const theme = createTheme({
+  palette: {
+    background: {
+      paper: '#F5F5F5',
+    },
+    text: {
+      primary: '#173A5E',
+      secondary: '#46505A',
+    },
+    primary: {
+      main: '#173A5E',
+    },
+  },
+})
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 )

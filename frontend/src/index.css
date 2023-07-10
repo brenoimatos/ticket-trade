@@ -197,6 +197,9 @@ header {
 }
 
 /* TicketList.css */
+.small-text {
+  font-size: 0.75rem; /* ou qualquer tamanho que você preferir */
+}
 
 .ticket-list {
   display: flex;

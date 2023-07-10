@@ -1,13 +1,31 @@
-// TicketList.js
-import { Link, useLoaderData, Form, useParams } from 'react-router-dom'
-import moment from 'moment'
-import Modal from 'react-modal'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import {
+  Link as RouterLink,
+  useLoaderData,
+  Form,
+  useParams,
+} from 'react-router-dom'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import api from '../api'
 import { requireAuth } from '../api/auth'
-
-Modal.setAppElement('#root')
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  IconButton,
+  Grid,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Typography,
+  Box,
+  CardActionArea,
+} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import moment from 'moment'
 
 export async function loader({ params }) {
   return {
@@ -43,80 +61,99 @@ function TicketList() {
     tickets
       .filter((ticket) => ticket.is_for_sale === isForSale)
       .map((ticket) => (
-        <Link
-          to={`/events/${eventId}/tickets/${ticket.id}`}
-          state={{ ticket: ticket }}
-          className="ticket-card"
-          key={ticket.id}
-        >
-          <div>
-            <h3>R$ {ticket.price.toFixed(0)}</h3>
-            <h5>
-              {ticket.user.first_name} {ticket.user.last_name}
-            </h5>{' '}
-            <small>
-              Última atualização:{' '}
-              {moment(ticket.updated_at).format('HH:mm [de] DD/MM/YYYY')}
-            </small>
-          </div>
-          <div className="card-actions">
-            {/* Apenas mostrar o botão de delete se o usuário é o dono do ticket */}
-            {ticket.user.id === user.id && (
-              <button
-                onClick={(event) => {
-                  event.stopPropagation()
-                  event.preventDefault()
-                  openModal(ticket.id)
-                }}
-              >
-                X
-              </button>
-            )}
-          </div>
-        </Link>
+        <Grid item xs={12} sm={12} key={ticket.id}>
+          <CardActionArea
+            component={RouterLink}
+            to={`/events/${eventId}/tickets/${ticket.id}`}
+          >
+            <Card
+              variant="outlined"
+              sx={{
+                textDecoration: 'none',
+              }}
+            >
+              <CardHeader
+                action={
+                  ticket.user.id === user.id && (
+                    <IconButton
+                      aria-label="settings"
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        event.preventDefault()
+                        openModal(ticket.id)
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  )
+                }
+                title={`R$ ${ticket.price.toFixed(0)}`}
+                subheader={`${ticket.user.first_name} ${ticket.user.last_name}`}
+              />
+              <CardContent>
+                <Typography variant="caption text" color="text.secondary">
+                  Última atualização:{' '}
+                  {moment(ticket.updated_at).format('HH:mm [de] DD/MM/YYYY')}
+                </Typography>
+              </CardContent>
+            </Card>
+          </CardActionArea>
+        </Grid>
       ))
 
-  function CreateTicketButton() {
-    return (
-      <div className="create-ticket">
-        <Link to="create" className="custom-link-button">
-          Criar oferta de venda ou compra
-        </Link>
-      </div>
-    )
-  }
-
   return (
-    <div>
-      <CreateTicketButton />
-      <div className="ticket-list">
-        <div className="sell-tickets">
-          <h2>Vendedores</h2>
-          {renderTickets(true)}
-        </div>
-        <div className="separator"></div>
-        <div className="buy-tickets">
-          <h2>Compradores</h2>
-          {renderTickets(false)}
-        </div>
-      </div>
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Confirmar Exclusão"
-        className="Modal"
-        overlayClassName="Overlay"
+    <Box
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+    >
+      <Button
+        variant="contained"
+        color="primary"
+        component={RouterLink}
+        to="create"
+        sx={{ marginBottom: '2rem', marginTop: '1rem' }}
       >
-        <h2>Confirmar exclusão</h2>
-        <p>Você realmente deseja excluir esse ticket?</p>
-        <Form method="delete" replace onSubmit={() => closeModal()}>
-          <input name="ticketId" defaultValue={ticketIdToDelete} hidden />
-          <button type="submit">Confirmar</button>
-          <button onClick={closeModal}>Cancelar</button>
-        </Form>
-      </Modal>
-    </div>
+        Criar oferta de venda ou compra
+      </Button>
+      <Grid
+        container
+        spacing={{ sm: 2, xs: 1 }}
+        sx={{ width: { sm: '60%' }, maxWidth: '100%' }}
+      >
+        <Grid item xs={6} sm={6}>
+          <Typography variant="h6" align="center">
+            Vendedores
+          </Typography>
+          {renderTickets(true)}
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <Typography variant="h6" align="center">
+            Compradores
+          </Typography>
+          {renderTickets(false)}
+        </Grid>
+      </Grid>
+
+      <Dialog open={modalIsOpen} onClose={closeModal}>
+        <DialogTitle>Confirmar exclusão</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Você realmente deseja excluir esse ticket?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeModal} color="secondary">
+            Cancelar
+          </Button>
+          <Form method="delete" replace onSubmit={() => closeModal()}>
+            <input name="ticketId" defaultValue={ticketIdToDelete} hidden />
+            <Button color="primary" type="submit">
+              Confirmar
+            </Button>
+          </Form>
+        </DialogActions>
+      </Dialog>
+    </Box>
   )
 }
+
 export default TicketList
