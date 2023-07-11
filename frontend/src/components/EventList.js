@@ -1,7 +1,24 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Typography, Box } from '@mui/material'
+import { styled } from '@mui/system'
 
-function EventList({ events }) {
+const EventCard = styled(Box)(({ theme }) => ({
+  backgroundColor: '#f9f9f9',
+  border: '1px solid #ddd',
+  padding: theme.spacing(1.5),
+  margin: theme.spacing(0.4, 0),
+  borderRadius: '5px',
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  '&:hover': {
+    backgroundColor: '#f1f1f1',
+  },
+}))
+
+const EventList = ({ events }) => {
   const formatDate = (dateString) => {
     const options = {
       weekday: 'long',
@@ -13,24 +30,59 @@ function EventList({ events }) {
   }
 
   return (
-    <div className="event-list">
+    <Box className="event-list" sx={{ width: '100%', m: '0', pl: '0px' }}>
       {events.map((event) => (
         <Link
           key={event.id}
           to={`/events/${event.id}/tickets`}
           className="event-link"
         >
-          <div className="event-card">
-            <div className="event-date">
-              <span className="date-icon">📅</span>
-              <span>{formatDate(event.date)}</span>
-            </div>
-            <h4>{event.name}</h4>
-            <h5 className="event-location">📍 {event.location}</h5>
-          </div>
+          <EventCard sx={{ pl: '0px' }}>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                marginBottom: '3px',
+                color: 'red',
+                fontSize: '1rem',
+                pl: '10px',
+              }}
+            >
+              <span role="img" aria-label="date-icon">
+                📅{' '}
+              </span>
+              {formatDate(event.date)}
+            </Typography>
+            <Typography
+              variant="h4"
+              component="h2"
+              sx={{
+                marginBottom: '3px',
+                fontWeight: 'bold',
+                fontSize: '18px',
+                lineHeight: '18px',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                pl: '10px',
+              }}
+            >
+              {event.name}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              className="event-location"
+              sx={{ fontSize: '14px', color: '#333', pl: '10px' }}
+            >
+              <span role="img" aria-label="location-icon">
+                📍{' '}
+              </span>
+              {event.location}
+            </Typography>
+          </EventCard>
         </Link>
       ))}
-    </div>
+    </Box>
   )
 }
 
