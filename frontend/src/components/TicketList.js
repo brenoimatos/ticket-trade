@@ -26,6 +26,7 @@ import {
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import moment from 'moment'
+import 'moment/locale/pt-br'
 
 export async function loader({ params }) {
   return {
@@ -70,6 +71,7 @@ function TicketList() {
               variant="outlined"
               sx={{
                 textDecoration: 'none',
+                mb: '10px',
               }}
             >
               <CardHeader
@@ -88,12 +90,18 @@ function TicketList() {
                   )
                 }
                 title={`R$ ${ticket.price.toFixed(0)}`}
-                subheader={`${ticket.user.first_name} ${ticket.user.last_name}`}
+                subheader={
+                  <Typography variant="h6" color="text.primary">
+                    {`${ticket.user.first_name} ${ticket.user.last_name}`}
+                  </Typography>
+                }
+                sx={{ paddingBottom: 0.4 }} // Reduz o espaço entre o header e o content
               />
-              <CardContent>
+              <CardContent
+                sx={{ paddingTop: 0, paddingBottom: 1 }} // Reduz a altura do CardContent
+              >
                 <Typography variant="caption text" color="text.secondary">
-                  Última atualização:{' '}
-                  {moment(ticket.updated_at).format('HH:mm [de] DD/MM/YYYY')}
+                  Criado {moment(ticket.updated_at).locale('pt-br').fromNow()}
                 </Typography>
               </CardContent>
             </Card>
@@ -103,7 +111,12 @@ function TicketList() {
 
   return (
     <Box
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        mb: '20px',
+      }}
     >
       <Button
         variant="contained"
