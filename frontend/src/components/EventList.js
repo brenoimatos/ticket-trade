@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Typography, Box } from '@mui/material'
 import { styled } from '@mui/system'
+import { getLocationDisplay } from '../utils'
 
 const EventCard = styled(Box)(({ theme }) => ({
   backgroundColor: '#f9f9f9',
@@ -77,7 +78,7 @@ const EventList = ({ events }) => {
               <span role="img" aria-label="location-icon">
                 📍{' '}
               </span>
-              {event.location}
+              {getLocationDisplay(event)}
             </Typography>
           </EventCard>
         </Link>

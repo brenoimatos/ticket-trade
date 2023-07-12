@@ -4,6 +4,7 @@ import api from '../api'
 import { Typography, Button, Box, Paper } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import eventDetailImage from '../assets/eventDetail.jpg'
+import { getLocationDisplay } from '../utils'
 
 export async function loader({ params }) {
   return {
@@ -31,7 +32,7 @@ function EventDetail() {
     }
     return url
   }
-
+  const locationDisplay = getLocationDisplay(event)
   return (
     <div>
       <Paper
@@ -52,7 +53,7 @@ function EventDetail() {
       >
         <Box
           style={{
-            backgroundColor: 'rgba(0,0,0,0.4)',
+            backgroundColor: 'rgba(0,0,0,0.7)',
             position: 'absolute',
             top: 0,
             bottom: 0,
@@ -81,10 +82,16 @@ function EventDetail() {
         </Typography>
         <Typography
           variant="h5"
-          style={{ marginTop: theme.spacing(1), zIndex: 1, fontSize: '1.5rem' }}
+          style={{
+            marginTop: theme.spacing(1),
+            zIndex: 1,
+            fontSize: '1.5rem',
+            wordWrap: 'break-word',
+          }}
         >
-          📍 {event.location}
+          📍 {locationDisplay}
         </Typography>
+
         <Button
           variant="contained"
           style={{
