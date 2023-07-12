@@ -10,7 +10,9 @@ export async function action({ request }) {
   const ticket_url = formData.get('ticket_url')
   try {
     const data = await createEvent({ name, location, date, ticket_url })
-    return redirect(`/events/${data.id}/tickets`)
+    return redirect(
+      `/events/${data.id}/tickets?message=Seu evento foi criado e está pendente de aprovação do administrador para se tornar visível a todos.`
+    )
   } catch (err) {
     return err.message
   }
