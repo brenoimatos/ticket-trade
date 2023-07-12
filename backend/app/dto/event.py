@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -18,6 +19,16 @@ class Event(EventBase):
     created_at: datetime
     updated_at: datetime
     user_id: UUID
+    location_city: Optional[str]
+    location_lat: Optional[float]
+    location_lon: Optional[float]
+    location_name: Optional[str]
+    location_street: Optional[str]
+    location_zipcode: Optional[str]
+    categories: Optional[list[str]]
+    poster_medium: Optional[str]
+    poster_small: Optional[str]
+
 
     class Config:
         orm_mode = True

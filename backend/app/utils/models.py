@@ -9,5 +9,5 @@ class StatusEnum(Enum):
     REJECTED = 'rejected'
 
 
-# crawler_files = [f[:-3] for f in os.listdir("app/services/crawler") if f.endswith(".py") and f != "base_crawler.py"]
-# CrawlerEnum = Enum("CrawlerEnum", {crawler.capitalize(): crawler for crawler in crawler_files})
+crawler_files = [f[:-3] for f in os.listdir("app/services/crawler") if f.endswith(".py") and f != "base_crawler.py"]
+CrawlerEnum = Enum("CrawlerEnum", {crawler.capitalize(): crawler for crawler in crawler_files})

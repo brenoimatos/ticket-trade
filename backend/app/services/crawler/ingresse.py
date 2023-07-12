@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 import requests
 
@@ -15,7 +17,7 @@ class CrawlerIngresse(BaseCrawler):
 
     def get_events(self, location: str):
         all_categories_data = [d for category in self.category for d in self._get_data(location, category)['data']['hits']]
-        return self._process_data(all_categories_data, location)
+        return self._process_data(all_categories_data)
 
     def _get_data(self, location: str, category: str):
         return requests.get(self.base_api.format(location=location, category=category)).json()
@@ -30,8 +32,8 @@ class CrawlerIngresse(BaseCrawler):
                 "location_name": [d['_source']['place']['name'] for d in raw_data],
                 "location_street": [d['_source']['place']['street'] for d in raw_data],
                 "location_zipcode": [d['_source']['place']['zip'] for d in raw_data],
-                "date": [[x['dateTime'] for x in d['_source']['sessions'] if x['status'] != 'finished'] for d in raw_data],
-                "updated_at": [d['_source']['updatedAt'] for d in raw_data],
+                "date": [[datetime.fromisoformat(x['dateTime']) for x in d['_source']['sessions'] if x['status'] != 'finished'] for d in raw_data],
+                "updated_at": [datetime.fromisoformat(d['_source']['updatedAt']) for d in raw_data],
                 "categories": [[x['slug'] for x in d['_source']['categories']] for d in raw_data],
                 "poster_medium": [d['_source']['poster']['medium'] for d in raw_data],
                 "poster_small": [d['_source']['poster']['small'] for d in raw_data],
