@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { apiBaseUrl } from '../api/apiConfig'
 import EventList from './EventList'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { Box, InputBase, IconButton, Container } from '@mui/material'
+import api from '../api'
 
 function EventSearch() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -20,12 +20,7 @@ function EventSearch() {
 
   useEffect(() => {
     if (debouncedSearchTerm.length >= 2 || debouncedSearchTerm.length === 0) {
-      fetch(
-        `${apiBaseUrl}/events/?search=${debouncedSearchTerm}&sort=["name", "ASC"]&range=[0, 5]`
-      )
-        .then((res) => res.json())
-        .then((data) => setSearchResults(data))
-        .catch((err) => console.error(err))
+      api.getEvents(debouncedSearchTerm, setSearchResults)
     } else {
       setSearchResults([])
     }

@@ -12,7 +12,7 @@ import {
   getUserById,
   updateMyUser,
 } from './users'
-import { getEventById, createEvent } from './events'
+import { getEventById, createEvent, getEvents } from './events'
 import { logout, login } from './auth'
 
 export default {
@@ -27,6 +27,7 @@ export default {
   deleteUser,
   getEventById,
   createEvent,
+  getEvents,
   logout,
   login,
   updateMyUser,

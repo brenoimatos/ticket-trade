@@ -1,4 +1,4 @@
-import { apiBaseUrl } from "./apiConfig"
+import { apiBaseUrl } from './apiConfig'
 
 export async function getEventById(eventId) {
   return fetch(`${apiBaseUrl}/events/?event_id=${eventId}`)
@@ -25,4 +25,13 @@ export async function createEvent(eventData) {
     }
   }
   return data
+}
+
+export async function getEvents(debouncedSearchTerm, setSearchResults) {
+  fetch(
+    `${apiBaseUrl}/events/?search=${debouncedSearchTerm}&sort=["date", "ASC"]&range=[0, 5]`
+  )
+    .then((res) => res.json())
+    .then((data) => setSearchResults(data))
+    .catch((err) => console.error(err))
 }
