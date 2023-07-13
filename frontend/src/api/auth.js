@@ -3,7 +3,6 @@ import { redirect } from 'react-router-dom'
 import { validateUser } from './users'
 import { apiBaseUrl } from './apiConfig'
 
-
 export const login = async (username, password) => {
   const res = await fetch(`${apiBaseUrl}/auth/jwt/login`, {
     method: 'POST',
@@ -39,7 +38,6 @@ export const register = async (
   raw_phone
 ) => {
   const phone = Number(raw_phone.replace(/\D/g, ''))
-  console.log(email, password, first_name, last_name, phone)
   const res = await fetch(`${apiBaseUrl}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -64,12 +62,28 @@ export const register = async (
   return console.log('Registered')
 }
 
+export const forgotPassword = async (email) => {
+  const res = await fetch(`${apiBaseUrl}/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  })
+  return res
+}
+
+export const resetPassword = async (password, token) => {
+  const res = await fetch(`${apiBaseUrl}/auth/reset-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password, token }),
+  })
+  return res
+}
+
 export async function requireAuth(request) {
   const pathname = new URL(request.url).pathname
   const isUserValid = await validateUser()
-  console.log('isUserValid', isUserValid)
   if (!isUserValid) {
-    console.log('UserNoTValid')
     throw redirect(
       `/login?message=Você precisa estar logado para acessar esta página.&redirectTo=${pathname}`
     )

@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLIENT_SECRET: str
     GOOGLE_STATE_SECRET: str
+    SENDGRID_API_KEY: str
 
     @validator("DATABASE_URL", pre=True)
     def build_test_database_url(cls, v: Optional[str], values: Dict[str, Any]):

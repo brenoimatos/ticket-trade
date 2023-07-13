@@ -26,10 +26,12 @@ import {
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import moment from 'moment'
+import 'moment/locale/pt-br'
 
-export async function loader({ params }) {
+export async function loader({ params, request }) {
   return {
     tickets: await api.getTickets(params.eventId),
+    message: new URL(request.url).searchParams.get('message'),
   }
 }
 
@@ -43,7 +45,7 @@ export const action = async ({ request }) => {
 function TicketList() {
   const [user, setUser] = useLocalStorage('user', null)
   const { eventId } = useParams()
-  const { tickets } = useLoaderData()
+  const { tickets, message } = useLoaderData()
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const [ticketIdToDelete, setTicketIdToDelete] = useState(null)
 
@@ -56,55 +58,102 @@ function TicketList() {
     setModalIsOpen(false)
     setTicketIdToDelete(null)
   }
+  const renderTickets = (isForSale) => {
+    const filteredTickets = tickets.filter(
+      (ticket) => ticket.is_for_sale === isForSale
+    )
+    const sortedTickets = filteredTickets.sort((a, b) => {
+      if (isForSale) {
+        return a.price - b.price // Ascendente para compradores
+      } else {
+        return b.price - a.price // Descendente para vendedores
+      }
+    })
 
-  const renderTickets = (isForSale) =>
-    tickets
-      .filter((ticket) => ticket.is_for_sale === isForSale)
-      .map((ticket) => (
-        <Grid item xs={12} sm={12} key={ticket.id}>
-          <CardActionArea
-            component={RouterLink}
-            to={`/events/${eventId}/tickets/${ticket.id}`}
+    if (sortedTickets.length === 0) {
+      if (isForSale) {
+        return (
+          <Typography variant="body2" color="text.secondary" align="center">
+            Não há vendedores até o momento.
+          </Typography>
+        )
+      } else {
+        return (
+          <Typography variant="body2" color="text.secondary" align="center">
+            Não há compradores até o momento.
+          </Typography>
+        )
+      }
+    }
+
+    return sortedTickets.map((ticket) => (
+      <Grid item xs={12} sm={12} key={ticket.id}>
+        <CardActionArea
+          component={RouterLink}
+          to={`/events/${eventId}/tickets/${ticket.id}`}
+        >
+          <Card
+            variant="outlined"
+            sx={{
+              textDecoration: 'none',
+              mb: '10px',
+            }}
           >
-            <Card
-              variant="outlined"
-              sx={{
-                textDecoration: 'none',
-              }}
-            >
-              <CardHeader
-                action={
-                  ticket.user.id === user.id && (
-                    <IconButton
-                      aria-label="settings"
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        event.preventDefault()
-                        openModal(ticket.id)
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  )
-                }
-                title={`R$ ${ticket.price.toFixed(0)}`}
-                subheader={`${ticket.user.first_name} ${ticket.user.last_name}`}
-              />
-              <CardContent>
-                <Typography variant="caption text" color="text.secondary">
-                  Última atualização:{' '}
-                  {moment(ticket.updated_at).format('HH:mm [de] DD/MM/YYYY')}
+            <CardHeader
+              action={
+                ticket.user.id === user.id && (
+                  <IconButton
+                    aria-label="settings"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      event.preventDefault()
+                      openModal(ticket.id)
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                )
+              }
+              title={
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: 'bold' }}
+                >{`R$ ${ticket.price.toFixed(0)}`}</Typography>
+              }
+              subheader={
+                <Typography variant="h6" color="text.primary">
+                  {`${ticket.user.first_name} ${ticket.user.last_name}`}
                 </Typography>
-              </CardContent>
-            </Card>
-          </CardActionArea>
-        </Grid>
-      ))
+              }
+              sx={{ paddingBottom: '0.3px' }} // Reduz o espaço entre o header e o content
+            />
+            <CardContent
+              sx={{ paddingTop: 0, paddingBottom: '500px' }} // Reduz a altura do CardContent
+            >
+              <Typography
+                variant="caption text"
+                color="text.secondary"
+                sx={{ fontSize: '0.8rem', mb: '0px' }}
+              >
+                Criado {moment(ticket.updated_at).locale('pt-br').fromNow()}
+              </Typography>
+            </CardContent>
+          </Card>
+        </CardActionArea>
+      </Grid>
+    ))
+  }
 
   return (
     <Box
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        mb: '20px',
+      }}
     >
+      {message && <h3 className="red">{message}</h3>}
       <Button
         variant="contained"
         color="primary"
@@ -120,13 +169,13 @@ function TicketList() {
         sx={{ width: { sm: '60%' }, maxWidth: '100%' }}
       >
         <Grid item xs={6} sm={6}>
-          <Typography variant="h6" align="center">
+          <Typography variant="h5" align="center" sx={{ mb: '0.8rem' }}>
             Vendedores
           </Typography>
           {renderTickets(true)}
         </Grid>
         <Grid item xs={6} sm={6}>
-          <Typography variant="h6" align="center">
+          <Typography variant="h5" align="center" sx={{ mb: '0.8rem' }}>
             Compradores
           </Typography>
           {renderTickets(false)}

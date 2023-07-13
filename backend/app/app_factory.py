@@ -54,11 +54,11 @@ class AppFactory:
             prefix=f"{self.config.API_PATH}/auth",
             tags=["auth"],
         )
-        # self.app.include_router(
-        #     fastapi_users_obj.get_verify_router(UserRead),
-        #     prefix=f"{self.config.API_PATH}/auth",
-        #     tags=["auth"],
-        # )
+        self.app.include_router(
+            fastapi_users_obj.get_reset_password_router(),
+            prefix=f"{self.config.API_PATH}/auth",
+            tags=["auth"],
+        )
         self.app.include_router(
             fastapi_users_obj.get_users_router(UserRead, UserUpdate, requires_verification=False),
             prefix=f"{self.config.API_PATH}/users",

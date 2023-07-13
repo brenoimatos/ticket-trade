@@ -1,3 +1,4 @@
+import importlib
 from typing import Any, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -5,6 +6,7 @@ from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import Response
 
+from app.dal.events import EventDal
 from app.deps.db import get_async_session
 from app.deps.request_params import parse_react_admin_params
 from app.deps.users import current_user
@@ -13,20 +15,31 @@ from app.dto.event import EventCreate
 from app.dto.request_params import RequestParams
 from app.models.event import Event as EventModel
 from app.models.user import User
+from app.services.event_service import EventService
+from app.utils.crawler_instance import get_crawler_instance
+from app.utils.models import CrawlerEnum
 
 router = APIRouter(prefix="/events")
+dal = EventDal()
+service = EventService()
 
 @router.post("/", response_model=EventSchema)
-async def create_event(
+async def create_event_user(
     event: EventCreate,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
 ) -> Any:
-    db_event = EventModel(**event.dict(), user_id=user.id)
-    session.add(db_event)
-    await session.commit()
-    await session.refresh(db_event)
-    return db_event
+    return await dal.create_event_db_user(session, event, user)
+
+@router.post("/crawler-events", response_model=int)
+async def create_event_crawler(
+    location: str,
+    crawler: CrawlerEnum,
+    session: AsyncSession = Depends(get_async_session),
+) -> Any:
+    crawler_instance = get_crawler_instance(crawler)
+
+    return await service.create_event_db_crawler(session, location, crawler_instance)
 
 @router.get("/", response_model=List[EventSchema])
 async def read_events(
@@ -36,21 +49,9 @@ async def read_events(
     session: AsyncSession = Depends(get_async_session),
     request_params: RequestParams = Depends(parse_react_admin_params(EventModel)),
 ) -> Any:
-    total = await session.scalar(
-        select(func.count(EventModel.id))
-    )
-    
-    query = select(EventModel).offset(request_params.skip).limit(request_params.limit).order_by(request_params.order_by)
-    
-    if event_id is not None:
-        query = query.where(EventModel.id == event_id)
-    if search:
-        query = query.where(or_(EventModel.name.ilike(f"%{search}%"), EventModel.location.ilike(f"%{search}%")))
-        
-    events = (
-        await session.execute(query)
-    ).scalars().all()
+    events, total = await dal.read_events_db(session, search, event_id, request_params)
     response.headers[
         "Content-Range"
     ] = f"{request_params.skip}-{request_params.skip + len(events)}/{total}"
     return events
+

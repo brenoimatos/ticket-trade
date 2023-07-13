@@ -12,8 +12,8 @@ import {
   getUserById,
   updateMyUser,
 } from './users'
-import { getEventById, createEvent } from './events'
-import { logout, login } from './auth'
+import { getEventById, createEvent, getEvents } from './events'
+import { logout, login, forgotPassword, resetPassword } from './auth'
 
 export default {
   getTickets,
@@ -27,7 +27,10 @@ export default {
   deleteUser,
   getEventById,
   createEvent,
+  getEvents,
   logout,
   login,
+  forgotPassword,
+  resetPassword,
   updateMyUser,
 }

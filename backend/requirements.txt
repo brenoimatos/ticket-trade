@@ -19,3 +19,5 @@ requests==2.31.0
 Authlib==1.2.0
 fastapi-users[sqlalchemy,oauth]
 fastapi-users[beanie,oauth]
+pandas==2.0.3
+sendgrid==6.10.0
