@@ -1,6 +1,7 @@
 import uuid
+from typing import Optional
 
-from fastapi import Depends
+from fastapi import Depends, Request
 from fastapi_users import FastAPIUsers
 from fastapi_users.authentication import (AuthenticationBackend,
                                           BearerTransport, CookieTransport,
@@ -13,11 +14,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings_conf
 from app.deps.db import get_async_session
 from app.models.user import OAuthAccount
+from app.models.user import User
 from app.models.user import User as UserModel
+from app.utils.email import send_reset_email
 
 bearer_transport = BearerTransport(tokenUrl=f"{settings_conf.API_PATH}/auth/jwt/login")
+COOKIE_EXPIRY_HOURS = 6
 cookie_transport = CookieTransport(
-    cookie_max_age=3600,
+    cookie_max_age=COOKIE_EXPIRY_HOURS * 60 * 60,
     cookie_name='cookie-ticket',
     cookie_secure=True,
     cookie_samesite='none',
@@ -47,10 +51,10 @@ class UserManager(UUIDIDMixin, BaseUserManager[UserModel, uuid.UUID]):
     # async def on_after_register(self, user: User, request: Optional[Request] = None):
     #     print(f"User {user.id} has registered.")
 
-    # async def on_after_forgot_password(
-    #     self, user: User, token: str, request: Optional[Request] = None
-    # ):
-    #     print(f"User {user.id} has forgot their password. Reset token: {token}")
+    async def on_after_forgot_password(
+        self, user: User, token: str, request: Optional[Request] = None
+    ):
+        send_reset_email(user.email, user.first_name, token)
 
     # async def on_after_request_verify(
     #     self, user: User, token: str, request: Optional[Request] = None

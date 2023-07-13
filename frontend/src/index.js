@@ -21,7 +21,7 @@ import Login, {
   loader as loginLoader,
   action as loginAction,
 } from './pages/Login'
-import { requireAuth } from './api/auth'
+import { requireAuth, resetPassword } from './api/auth'
 import Register, { action as registerAction } from './pages/Register'
 import TicketDetail, {
   loader as ticketDetailLoader,
@@ -31,6 +31,13 @@ import EventDetail, {
 } from './components/EventDetail'
 import UserProfile from './pages/UserProfile'
 import { ThemeProvider, createTheme } from '@mui/material'
+import ForgotPassword, {
+  action as forgotPasswordAction,
+} from './pages/ForgotPassword'
+import ResetPassword, {
+  loader as resetPasswordLoader,
+  action as resetPasswordAction,
+} from './pages/ResetPassword'
 
 export default function App() {
   const router = createBrowserRouter(
@@ -44,6 +51,17 @@ export default function App() {
           action={loginAction}
         />
         <Route path="register" element={<Register />} action={registerAction} />
+        <Route
+          path="forgot-password"
+          element={<ForgotPassword />}
+          action={forgotPasswordAction}
+        />
+        <Route
+          path="reset-password"
+          element={<ResetPassword />}
+          action={resetPasswordAction}
+          loader={resetPasswordLoader}
+        />
         <Route
           path="account"
           element={<UserProfile />}

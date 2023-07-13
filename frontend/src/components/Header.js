@@ -6,7 +6,6 @@ import { useLocalStorage } from '../hooks/useLocalStorage'
 
 // Avatar component
 function Avatar({ fullName }) {
-  console.log(fullName)
   const initials = fullName
     ?.split(' ')
     .map((name) => name[0])
@@ -26,7 +25,7 @@ function Header() {
     // You may need to send a request to the server to invalidate the session/cookie here
     const data = await api.logout()
     setUser(null)
-    console.log('data logout', data)
+    console.log('Logout')
     return null
   }
 
