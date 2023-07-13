@@ -31,14 +31,22 @@ const EventList = ({ events }) => {
   }
 
   return (
-    <Box className="event-list" sx={{ width: '100%', m: '0', pl: '0px' }}>
+    <Box sx={{ width: 1 }}>
       {events.map((event) => (
         <Link
           key={event.id}
           to={`/events/${event.id}/tickets`}
           className="event-link"
         >
-          <EventCard sx={{ pl: '0px' }}>
+          <EventCard
+            sx={{
+              pl: 0,
+              pr: 0,
+              pb: 1,
+              pt: 1,
+              mb: { xs: 1, sm: 0.7 },
+            }}
+          >
             <Typography
               variant="h6"
               component="div"
