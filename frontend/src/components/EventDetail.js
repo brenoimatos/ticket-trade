@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom'
 import api from '../api'
 import { Typography, Button, Box, Paper } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import eventDetailImage from '../assets/eventDetail.jpg'
+import eventBackgroundImage from '../assets/eventBackground.jpg'
 import { getLocationDisplay } from '../utils'
 
 export async function loader({ params }) {
@@ -39,7 +39,7 @@ function EventDetail() {
         style={{
           position: 'relative',
           minHeight: '30vh',
-          backgroundImage: `url(${eventDetailImage})`,
+          backgroundImage: `url(${eventBackgroundImage})`,
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
@@ -69,14 +69,23 @@ function EventDetail() {
         >
           <Typography
             variant="h2"
-            style={{ wordWrap: 'break-word', fontSize: '3rem' }}
+            style={{
+              wordWrap: 'break-word',
+              fontSize: '3rem',
+              textShadow: '2px 2px 4px #000000',
+            }}
           >
             {event.name}
           </Typography>
         </Box>
         <Typography
           variant="h5"
-          style={{ marginTop: theme.spacing(1), zIndex: 1, fontSize: '1.5rem' }}
+          style={{
+            marginTop: theme.spacing(1),
+            zIndex: 1,
+            fontSize: '1.5rem',
+            textShadow: '1px 1px 3px #000000',
+          }}
         >
           📅 {formatDate(event.date)}
         </Typography>
@@ -87,6 +96,7 @@ function EventDetail() {
             zIndex: 1,
             fontSize: '1.5rem',
             wordWrap: 'break-word',
+            textShadow: '1px 1px 3px #000000',
           }}
         >
           📍 {locationDisplay}

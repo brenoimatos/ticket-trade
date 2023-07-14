@@ -3,7 +3,7 @@ import EventList from './EventList'
 import { Box, InputBase, IconButton, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import api from '../api'
-import eventSearchImage from '../assets/eventSearch.jpg'
+import homeBackgroundImage from '../assets/homeBackground.jpg'
 
 function EventSearch() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -46,7 +46,7 @@ function EventSearch() {
           alignItems: 'center',
           justifyContent: 'center',
           flexDirection: 'column',
-          background: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${eventSearchImage})`,
+          background: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${homeBackgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
