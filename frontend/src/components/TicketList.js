@@ -27,6 +27,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import moment from 'moment'
 import 'moment/locale/pt-br'
+import { formatName } from '../utils'
 
 export async function loader({ params, request }) {
   return {
@@ -122,18 +123,23 @@ function TicketList() {
               }
               subheader={
                 <Typography variant="h6" color="text.primary">
-                  {`${ticket.user.first_name} ${ticket.user.last_name}`}
+                  {formatName(ticket.user.first_name, ticket.user.last_name)}
                 </Typography>
               }
-              sx={{ paddingBottom: '0.3px' }} // Reduz o espaço entre o header e o content
+              sx={{
+                paddingBottom: '0.3px',
+                pt: 1,
+                pl: 1.5,
+                pr: 1.5,
+              }} // Reduz o espaço entre o header e o content
             />
             <CardContent
-              sx={{ paddingTop: 0, paddingBottom: '500px' }} // Reduz a altura do CardContent
+              sx={{ pt: 0, pl: 1.5, pb: 0, '&:last-child': { pb: 1 } }} // Reduz a altura do CardContent
             >
               <Typography
                 variant="caption text"
                 color="text.secondary"
-                sx={{ fontSize: '0.8rem', mb: '0px' }}
+                sx={{ fontSize: '0.8rem', mb: '0px', pb: 0 }}
               >
                 Criado {moment(ticket.updated_at).locale('pt-br').fromNow()}
               </Typography>

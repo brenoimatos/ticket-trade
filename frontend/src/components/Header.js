@@ -3,14 +3,11 @@ import { NavLink } from 'react-router-dom'
 import logoImage from '../assets/banca_logo.png' // Importe a imagem do logo
 import api from '../api'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import { getInitials } from '../utils'
 
 // Avatar component
 function Avatar({ fullName }) {
-  const initials = fullName
-    ?.split(' ')
-    .map((name) => name[0])
-    .join('')
-
+  const initials = getInitials(fullName)
   return (
     <NavLink to="/account" className="avatar">
       <div className="avatar-container">{initials}</div>
@@ -23,7 +20,7 @@ function Header() {
 
   const handleLogout = async () => {
     // You may need to send a request to the server to invalidate the session/cookie here
-    const data = await api.logout()
+    await api.logout()
     setUser(null)
     console.log('Logout')
     return null

@@ -5,6 +5,7 @@ import { requireAuth } from '../api/auth'
 import api from '../api'
 import moment from 'moment'
 import { Box, Typography } from '@mui/material'
+import { formatFullName, getInitials } from '../utils'
 
 export async function loader({ params, request }) {
   await requireAuth(request)
@@ -21,7 +22,10 @@ function TicketDetail() {
   ).slice(2, 7)}-${String(ticket.user.phone).slice(7)}`
 
   // Extrai as iniciais do usuário
-  const userInitials = `${ticket.user.first_name[0]}${ticket.user.last_name[0]}`
+  const userInitials = getInitials(
+    ticket.user.first_name,
+    ticket.user.last_name
+  )
 
   const messageTitle = 'Contato'
   const userRole = ticket.is_for_sale ? 'Vendedor' : 'Comprador'
@@ -157,7 +161,7 @@ function TicketDetail() {
               {userInitials}
             </Box>
             <Typography sx={{ fontSize: '1.5em' }}>
-              {ticket.user.first_name} {ticket.user.last_name}
+              {formatFullName(ticket.user.first_name, ticket.user.last_name)}
             </Typography>
           </Box>
           <Typography
