@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import EventList from './EventList'
-import { Box, InputBase, IconButton, Typography } from '@mui/material'
+import {
+  Box,
+  InputBase,
+  IconButton,
+  Typography,
+  CircularProgress,
+} from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import api from '../api'
 import homeBackgroundImage from '../assets/homeBackground.jpg'
@@ -9,6 +15,7 @@ function EventSearch() {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(false) // New loading state
 
   useEffect(() => {
     const delayTimer = setTimeout(() => {
@@ -20,9 +27,11 @@ function EventSearch() {
 
   useEffect(() => {
     if (debouncedSearchTerm.length >= 2 || debouncedSearchTerm.length === 0) {
-      api.getEvents(debouncedSearchTerm, setSearchResults)
-    } else {
-      setSearchResults([])
+      setIsLoading(true) // Set loading state to true before the request
+      api.getEvents(debouncedSearchTerm, (events) => {
+        setSearchResults(events)
+        setIsLoading(false) // Set loading state to false after the request is done
+      })
     }
   }, [debouncedSearchTerm])
 
@@ -85,7 +94,7 @@ function EventSearch() {
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
-            placeholder="Pesquisar evento"
+            placeholder="Pesquisar mais eventos"
             sx={{
               pl: 1,
               pr: 5,
@@ -98,22 +107,49 @@ function EventSearch() {
           </IconButton>
         </Box>
       </Box>
-      {searchResults && (
-        <Box
-          sx={{
-            width: { sm: '60%', xs: '90%' },
-            p: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            mt: 2,
-            mx: 'auto',
-          }}
-        >
+      <Box
+        sx={{
+          width: { sm: '60%', xs: '90%' },
+          p: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mt: 2,
+          mx: 'auto',
+        }}
+      >
+        {!searchTerm && !isLoading && (
+          <Typography
+            variant="h2"
+            align="center"
+            sx={{
+              mt: 2,
+              mb: 2,
+              color: 'black',
+              fontWeight: 'bold',
+              width: { sm: '100%', xs: '100%' }, // largura do texto
+              fontSize: { sm: '3rem', xs: '2.3rem' },
+            }}
+          >
+            Eventos em destaque
+          </Typography>
+        )}
+        {isLoading ? (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '60vh',
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
           <EventList events={searchResults} />
-        </Box>
-      )}
+        )}
+      </Box>
     </Box>
   )
 }

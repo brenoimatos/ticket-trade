@@ -15,7 +15,7 @@ import {
 import { getEventById, createEvent, getEvents } from './events'
 import { logout, login, forgotPassword, resetPassword } from './auth'
 
-export default {
+const api = {
   getTickets,
   getTicketById,
   createTicket,
@@ -34,3 +34,5 @@ export default {
   resetPassword,
   updateMyUser,
 }
+
+export default api

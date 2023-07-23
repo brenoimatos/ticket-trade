@@ -12,11 +12,13 @@ export const login = async (username, password) => {
   })
   if (!res.ok) {
     const data = await res.json()
-    throw {
-      message: data.detail,
-      statusText: res.statusText,
-      status: res.status,
-    }
+    throw new Error(
+      JSON.stringify({
+        message: data.detail,
+        statusText: res.statusText,
+        status: res.status,
+      })
+    )
   }
   return null
 }
@@ -52,11 +54,13 @@ export const register = async (
 
   if (!res.ok) {
     const data = await res.json()
-    throw {
-      message: data.detail,
-      statusText: res.statusText,
-      status: res.status,
-    }
+    throw new Error(
+      JSON.stringify({
+        message: data.detail,
+        statusText: res.statusText,
+        status: res.status,
+      })
+    )
   }
 
   return console.log('Registered')
