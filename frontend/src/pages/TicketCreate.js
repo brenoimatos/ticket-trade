@@ -79,7 +79,7 @@ function TicketCreate() {
         <TextField
           name="price"
           type="number"
-          label="Preço"
+          label="Preço por ingresso"
           required
           fullWidth
           variant="outlined"
@@ -101,8 +101,8 @@ function TicketCreate() {
         </FormControl>
         <TextField
           name="description"
-          label="Descrição"
-          placeholder="Tipo do ingresso, pista/premium/vip, masculino/feminino"
+          label="Informações adicionais"
+          placeholder="Ex: Pista/Vip; Masculino/Feminino; Meia/Inteira"
           fullWidth
           variant="outlined"
           margin="normal"

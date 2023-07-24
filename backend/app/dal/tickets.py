@@ -15,18 +15,18 @@ from app.models.user import User
 
 class TicketDal:
     async def create_ticket_db(self, session: AsyncSession, ticket: TicketCreate, user: User) -> Any:
-        existing_ticket = (
+        existing_tickets_count = (
             await session.execute(
-                select(TicketModel).where(
+                select(func.count(TicketModel.id)).where(
                     TicketModel.user_id == user.id, 
                     TicketModel.event_id == ticket.event_id)
             )
         ).scalar_one_or_none()
 
-        if existing_ticket is not None:
+        if existing_tickets_count is not None and existing_tickets_count >= 2:
             raise HTTPException(
                 status_code=400, 
-                detail="Para anunciar um novo ingresso para o mesmo evento, exclua o ingresso anteriormente criado."
+                detail="Você já possui 2 ingressos para este evento. Para anunciar um novo ingresso para o mesmo evento, exclua um dos ingressos anteriormente criados."
             )
 
         db_ticket = TicketModel(**ticket.dict(), user_id=user.id)
@@ -34,6 +34,7 @@ class TicketDal:
         await session.commit()
         await session.refresh(db_ticket)
         return db_ticket
+
 
     async def read_tickets_db(self, session: AsyncSession, event_id: int, request_params: RequestParams) -> Any:
         total = await session.scalar(
