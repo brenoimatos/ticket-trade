@@ -21,7 +21,7 @@ import Login, {
   loader as loginLoader,
   action as loginAction,
 } from './pages/Login'
-import { requireAuth, resetPassword } from './api/auth'
+import { requireAuth } from './api/auth'
 import Register, { action as registerAction } from './pages/Register'
 import TicketDetail, {
   loader as ticketDetailLoader,

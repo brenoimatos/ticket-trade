@@ -18,11 +18,13 @@ export async function createEvent(eventData) {
   })
   const data = await res.json()
   if (!res.ok) {
-    throw {
-      message: data.detail,
-      statusText: res.statusText,
-      status: res.status,
-    }
+    throw new Error(
+      JSON.stringify({
+        message: data.detail,
+        statusText: res.statusText,
+        status: res.status,
+      })
+    )
   }
   return data
 }

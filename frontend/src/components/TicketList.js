@@ -23,10 +23,12 @@ import {
   Typography,
   Box,
   CardActionArea,
+  Avatar,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import moment from 'moment'
 import 'moment/locale/pt-br'
+import { getInitials } from '../utils'
 
 export async function loader({ params, request }) {
   return {
@@ -43,7 +45,7 @@ export const action = async ({ request }) => {
 }
 
 function TicketList() {
-  const [user, setUser] = useLocalStorage('user', null)
+  const [user] = useLocalStorage('user', null)
   const { eventId } = useParams()
   const { tickets, message } = useLoaderData()
   const [modalIsOpen, setModalIsOpen] = useState(false)
@@ -100,40 +102,107 @@ function TicketList() {
             }}
           >
             <CardHeader
-              action={
-                ticket.user.id === user.id && (
-                  <IconButton
-                    aria-label="settings"
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      event.preventDefault()
-                      openModal(ticket.id)
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                )
-              }
+              sx={{
+                p: 0.5,
+              }}
               title={
-                <Typography
-                  variant="h5"
-                  sx={{ fontWeight: 'bold' }}
-                >{`R$ ${ticket.price.toFixed(0)}`}</Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Typography
+                      sx={{ fontSize: 17, fontWeight: 'bold', p: 0.4, pl: 0.6 }}
+                    >
+                      {`${ticket.quantity}`}
+                      <Typography
+                        color="text.secondary"
+                        component="span"
+                        sx={{ fontSize: 15, p: 0.4 }}
+                      >
+                        {`ingresso${ticket.quantity > 1 ? 's' : ''}`}
+                      </Typography>
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={6}
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                  >
+                    {ticket.user.id === user.id && (
+                      <IconButton
+                        aria-label="settings"
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          event.preventDefault()
+                          openModal(ticket.id)
+                        }}
+                        sx={{
+                          p: 0.4,
+                          '&:hover': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.08)', // Substitua esta cor conforme necessário
+                          },
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </Grid>
+                </Grid>
               }
-              subheader={
-                <Typography variant="h6" color="text.primary">
-                  {`${ticket.user.first_name} ${ticket.user.last_name}`}
-                </Typography>
-              }
-              sx={{ paddingBottom: '0.3px' }} // Reduz o espaço entre o header e o content
             />
             <CardContent
-              sx={{ paddingTop: 0, paddingBottom: '500px' }} // Reduz a altura do CardContent
+              sx={{
+                p: 0.5,
+                pt: 0,
+                '&:last-child': { pb: 0.8 },
+              }}
             >
+              <Grid container spacing={0} sx={{ pt: 0 }}>
+                <Grid item xs={3} sm={1.7} sx={{ pt: 0, mr: 0.5 }}>
+                  <Avatar sx={{ ml: 0.4 }}>
+                    {getInitials(ticket.user.first_name, ticket.user.last_name)}
+                  </Avatar>
+                </Grid>
+                <Grid
+                  item
+                  xs={8}
+                  sm={9}
+                  container
+                  direction="column"
+                  justifyContent="center"
+                  sx={{ pb: 0.5 }}
+                >
+                  <Grid container direction="row" alignItems="flex-end">
+                    <Typography
+                      variant={{ xs: 'body2', sm: 'h5' }}
+                      component="div"
+                      sx={{ fontWeight: 'bold', fontSize: 20 }}
+                    >
+                      {`R$ ${ticket.price.toFixed(0)}`}
+                    </Typography>
+                    <Typography
+                      component="span"
+                      sx={{ fontSize: 11, color: '#868e96', pl: 0.4 }}
+                    >
+                      /ingresso
+                    </Typography>
+                  </Grid>
+                  <Typography
+                    variant={{ xs: 'body2', sm: 'body2' }}
+                    color="text.secondary"
+                    sx={{
+                      fontSize: 12,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      maxWidth: '100%',
+                    }}
+                  >
+                    {ticket.description ? `"${ticket.description}"` : ' '}
+                  </Typography>
+                </Grid>
+              </Grid>
               <Typography
-                variant="caption text"
-                color="text.secondary"
-                sx={{ fontSize: '0.8rem', mb: '0px' }}
+                variant="caption"
+                sx={{ mt: 1, ml: 0.5, fontSize: 10, color: '#868e96' }}
               >
                 Criado {moment(ticket.updated_at).locale('pt-br').fromNow()}
               </Typography>
@@ -170,15 +239,15 @@ function TicketList() {
       >
         <Grid item xs={6} sm={6}>
           <Typography variant="h5" align="center" sx={{ mb: '0.8rem' }}>
-            Vendedores
-          </Typography>
-          {renderTickets(true)}
-        </Grid>
-        <Grid item xs={6} sm={6}>
-          <Typography variant="h5" align="center" sx={{ mb: '0.8rem' }}>
             Compradores
           </Typography>
           {renderTickets(false)}
+        </Grid>
+        <Grid item xs={6} sm={6}>
+          <Typography variant="h5" align="center" sx={{ mb: '0.8rem' }}>
+            Vendedores
+          </Typography>
+          {renderTickets(true)}
         </Grid>
       </Grid>
 

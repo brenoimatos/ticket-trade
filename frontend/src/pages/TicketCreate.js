@@ -12,17 +12,24 @@ import {
   Button,
   Typography,
   Box,
+  InputLabel,
 } from '@mui/material'
 
 export async function action({ params, request }) {
   const eventId = params.eventId
   const formData = await request.formData()
-  const price = formData.get('price')
-  const isForSale = formData.get('transactionType') === 'venda' ? true : false
+  const ticket = {
+    event_id: eventId,
+    price: formData.get('price'),
+    is_for_sale: formData.get('transactionType') === 'venda' ? true : false,
+    description: formData.get('description'),
+    quantity: formData.get('quantity'),
+  }
   try {
-    await createTicket(eventId, price, isForSale)
+    await createTicket(ticket)
     return redirect(`/events/${eventId}/tickets`)
   } catch (err) {
+    console.log(err)
     return err.message
   }
 }
@@ -34,7 +41,7 @@ function TicketCreate() {
   return (
     <Container
       sx={{
-        width: { sm: '60%' },
+        width: { sm: '40%' },
         maxWidth: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -59,20 +66,47 @@ function TicketCreate() {
 
       <Form method="post">
         <TextField
-          name="price"
+          name="quantity"
           type="number"
-          placeholder="Preço"
+          label="Quantidade"
+          defaultValue={1}
           required
           fullWidth
           variant="outlined"
           margin="normal"
         />
+
+        <TextField
+          name="price"
+          type="number"
+          label="Preço por ingresso"
+          required
+          fullWidth
+          variant="outlined"
+          margin="normal"
+        />
+
         <FormControl variant="outlined" fullWidth margin="normal">
-          <Select name="transactionType" defaultValue="venda" required>
+          <InputLabel id="transactionType-label">Ordem</InputLabel>
+          <Select
+            name="transactionType"
+            defaultValue="venda"
+            label="Ordem"
+            variant="outlined"
+            required
+          >
             <MenuItem value="venda">Venda</MenuItem>
             <MenuItem value="compra">Compra</MenuItem>
           </Select>
         </FormControl>
+        <TextField
+          name="description"
+          label="Informações adicionais"
+          placeholder="Ex: Pista/Vip; Masculino/Feminino; Meia/Inteira"
+          fullWidth
+          variant="outlined"
+          margin="normal"
+        />
         <Box display="flex" flexDirection="column" alignItems="center" mt={2}>
           <Button
             variant="contained"

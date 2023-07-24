@@ -1,4 +1,4 @@
-import { apiBaseUrl } from "./apiConfig"
+import { apiBaseUrl } from './apiConfig'
 
 export async function getTickets(eventId) {
   return fetch(`${apiBaseUrl}/tickets/info?event_id=${eventId}`)
@@ -13,24 +13,26 @@ export async function getTicketById(ticketId) {
     .catch((err) => console.error(err))
 }
 
-export async function createTicket(event_id, price, is_for_sale) {
+export async function createTicket(ticket) {
   const res = await fetch(`${apiBaseUrl}/tickets/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ event_id, price, is_for_sale }),
+    body: JSON.stringify(ticket),
     credentials: 'include',
   })
 
   const data = await res.json()
 
   if (!res.ok) {
-    throw {
-      message: data.detail || 'An error occurred while creating the ticket.',
-      statusText: res.statusText,
-      status: res.status,
-    }
+    let error = new Error(
+      JSON.stringify(data.detail) ||
+        'An error occurred while creating the ticket.'
+    )
+    error.statusText = res.statusText
+    error.status = res.status
+    throw error
   }
   return data
 }
