@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/workspace:cached
     ports:
-      - 8008:8000
+      - 9000:9000
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - PYTHONPATH=${PYTHONPATH}
