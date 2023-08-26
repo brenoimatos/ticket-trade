@@ -42,5 +42,6 @@ class CrawlerIngresse(BaseCrawler):
             })
             .explode('date')
             .reset_index(drop=True)
+            .drop_duplicates(subset=['name', 'date'])
         )
         

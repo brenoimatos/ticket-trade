@@ -47,6 +47,19 @@ export async function validateUser() {
     .catch((err) => false)
 }
 
+export async function validateSuperUser() {
+  return fetch(`${apiBaseUrl}/users/validate/super-user`, {
+    credentials: 'include',
+  })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Server responded with status: ${res.status}`)
+      }
+      return res.json()
+    })
+    .catch((err) => false)
+}
+
 export const updateUser = async (id, user) => {
   const res = await fetch(`${apiBaseUrl}/users/${id}`, {
     method: 'PATCH',
@@ -61,4 +74,22 @@ export const deleteUser = async (id) => {
     method: 'DELETE',
   })
   return await res.json()
+}
+
+export async function getDashUsersStats() {
+  return fetch(`${apiBaseUrl}/users/dash/stats`, { credentials: 'include' })
+    .then((res) => res.json())
+    .catch((err) => console.error(err))
+}
+
+export async function getDashUsers(skip, limit) {
+  return fetch(`${apiBaseUrl}/users/dash?skip=${skip}&limit=${limit}`, {
+    credentials: 'include',
+  })
+    .then(async (res) => {
+      const totalCount = res.headers.get('Content-Range') // Extract total count from the headers
+      const data = await res.json()
+      return { data, totalCount: parseInt(totalCount.split('/')[1], 10) } // Extract and return both data and totalCount
+    })
+    .catch((err) => console.error(err))
 }

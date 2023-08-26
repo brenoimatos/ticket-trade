@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional
 from uuid import UUID
 
@@ -35,6 +35,14 @@ class TicketInfo(BaseModel):
     created_at: datetime
     updated_at: datetime
     user: UserRead
+
+    class Config:
+        orm_mode = True
+
+class TicketDashStats(BaseModel):
+    created_date: date
+    buying_tickets: int
+    selling_tickets: int
 
     class Config:
         orm_mode = True

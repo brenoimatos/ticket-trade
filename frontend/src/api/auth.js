@@ -1,6 +1,6 @@
 import queryString from 'query-string'
 import { redirect } from 'react-router-dom'
-import { validateUser } from './users'
+import { validateSuperUser, validateUser } from './users'
 import { apiBaseUrl } from './apiConfig'
 
 export const login = async (username, password) => {
@@ -90,6 +90,17 @@ export async function requireAuth(request) {
   if (!isUserValid) {
     throw redirect(
       `/login?message=Você precisa estar logado para acessar esta página.&redirectTo=${pathname}`
+    )
+  }
+  return null
+}
+
+export async function requireSuperAuth(request) {
+  const pathname = new URL(request.url).pathname
+  const isUserValid = await validateSuperUser()
+  if (!isUserValid) {
+    throw redirect(
+      `/login?message=Você precisa estar logado como admin para acessar esta página.&redirectTo=${pathname}`
     )
   }
   return null

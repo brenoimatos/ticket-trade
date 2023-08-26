@@ -21,7 +21,7 @@ import Login, {
   loader as loginLoader,
   action as loginAction,
 } from './pages/Login'
-import { requireAuth } from './api/auth'
+import { requireAuth, requireSuperAuth } from './api/auth'
 import Register, { action as registerAction } from './pages/Register'
 import TicketDetail, {
   loader as ticketDetailLoader,
@@ -38,6 +38,7 @@ import ResetPassword, {
   loader as resetPasswordLoader,
   action as resetPasswordAction,
 } from './pages/ResetPassword'
+import AdminDashboard from './pages/AdminDashboard'
 
 export default function App() {
   const router = createBrowserRouter(
@@ -96,6 +97,11 @@ export default function App() {
             loader={ticketDetailLoader}
           />
         </Route>
+        <Route
+          path="admin-dash"
+          element={<AdminDashboard />}
+          loader={async ({ request }) => await requireSuperAuth(request)}
+        />
       </Route>
     )
   )
