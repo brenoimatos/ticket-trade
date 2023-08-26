@@ -53,3 +53,9 @@ export const deleteTicket = async (id) => {
     console.error(error)
   }
 }
+
+export async function getDashTicketsStats() {
+  return fetch(`${apiBaseUrl}/tickets/dash/stats`, { credentials: 'include' })
+    .then((res) => res.json())
+    .catch((err) => console.error(err))
+}
