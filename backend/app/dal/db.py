@@ -19,3 +19,9 @@ async_session_maker = async_sessionmaker(
 
 class Base(DeclarativeBase):
     pass
+
+
+
+class Dal:
+    def __init__(self, session: AsyncSession):
+        self.session = session
