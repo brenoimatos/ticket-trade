@@ -5,6 +5,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: brenoimatos/banca-frontend:latest
     volumes:
       - ./frontend:/app
       - ./data/nginx:/etc/nginx/conf.d
@@ -21,6 +22,7 @@ services:
     build:
       context: ./backend
       dockerfile: .devcontainer/Dockerfile
+    image: brenoimatos/banca-backend:latest
     command: /bin/sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 9000"
     volumes:
       - ./backend:/workspace:cached
