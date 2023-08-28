@@ -29,3 +29,9 @@ class EventService:
         inserted_events = await self.dal.bulk_insert_events(events_to_insert.to_dict(orient='records'))
 
         return len(events_to_insert)
+    
+    async def get_total_events_with_tickets_count(self) -> int:
+        return await self.dal.get_total_events_with_tickets_count()
+
+    async def get_dash_events_hot(self, skip: int, limit: int) -> list[Any]:
+        return await self.dal.get_dash_events_hot(skip, limit)

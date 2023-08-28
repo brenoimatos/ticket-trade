@@ -5,9 +5,9 @@ from starlette.responses import Response
 
 from app.deps.request_params import parse_react_admin_params
 from app.deps.service import get_event_service
-from app.deps.users import current_user
+from app.deps.users import current_superuser, current_user
 from app.dto.event import Event as EventSchema
-from app.dto.event import EventCreate
+from app.dto.event import EventCreate, EventDashHot
 from app.dto.request_params import RequestParams
 from app.models.event import Event as EventModel
 from app.models.user import User
@@ -45,3 +45,17 @@ async def read_events(
     events, total = await service.read_events(search, event_id, request_params)
     response.headers["Content-Range"] = f"{request_params.skip}-{request_params.skip + len(events)}/{total}"
     return events
+
+@router.get("/dash/hot", response_model=List[EventDashHot])
+async def get_dash_events_hot(
+    response: Response,
+    skip: int = 0,
+    limit: int = 100,
+    user: User = Depends(current_superuser),
+    service: EventService = Depends(get_event_service)
+) -> Any:
+    # Error if doing a asyncio gather to make async queries.
+    total_events_with_tickets = await service.get_total_events_with_tickets_count()
+    hot_events = await service.get_dash_events_hot(skip=skip, limit=limit)
+    response.headers["Content-Range"] = f"bytes {skip}-{skip + len(hot_events)}/{total_events_with_tickets}"
+    return hot_events
