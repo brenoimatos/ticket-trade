@@ -32,3 +32,17 @@ class Event(EventBase):
 
     class Config:
         orm_mode = True
+
+class EventDashHot(BaseModel):
+    id: int
+    name: str
+    location: str
+    date: datetime
+    total_tickets: int
+    tickets_selling: Optional[int]
+    tickets_buying: Optional[int]
+    average_price_selling: Optional[float]
+    average_price_buying: Optional[float]
+
+    class Config:
+        orm_mode = True

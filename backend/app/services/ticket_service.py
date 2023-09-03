@@ -7,7 +7,7 @@ from app.dto.request_params import RequestParams
 from app.dto.ticket import TicketCreate
 from app.models.ticket import Ticket
 from app.models.user import User
-from app.utils.process_data import fill_missing_days
+from app.utils.process_data import fill_missing_days, transform_to_cumulative
 
 
 class TicketService:
@@ -29,13 +29,16 @@ class TicketService:
     async def get_dash_tickets_stats(self) -> Any:
         return await self.dal.get_dash_tickets_stats()
 
-    async def get_dash_tickets_stats(self) -> Any:
+    async def get_dash_tickets_stats(self) -> list[dict]:
         rows = await self.dal.get_dash_tickets_stats()
         loop = asyncio.get_event_loop()
-        filled_rows = await loop.run_in_executor(
+        df_filled = await loop.run_in_executor(
             ThreadPoolExecutor(), fill_missing_days,
             rows, ['created_date', 'selling_tickets', 'buying_tickets'], 'created_date'
         )
-        return filled_rows
+        return (
+            transform_to_cumulative(df_filled, ['selling_tickets', 'buying_tickets'])
+            .to_dict(orient='records')
+        )
 
 

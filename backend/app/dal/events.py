@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import List, Optional, Tuple
 
-from sqlalchemy import and_, func, or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import and_, case, desc, func, join, or_, select
 
 from app.dal.db import Dal
 from app.dto.event import EventCreate
 from app.dto.request_params import RequestParams
 from app.models.event import Event as EventModel
+from app.models.ticket import Ticket as TicketModel
 from app.models.user import User
 from app.utils.models import StatusEnum
 
@@ -66,5 +66,65 @@ class EventDal(Dal):
         )
         user_id = result.scalar_one()
         return user_id
+    
+    async def get_total_events_with_tickets_count(self) -> int:
+        subquery = (
+            select(TicketModel.event_id)
+            .where(TicketModel.event_id == EventModel.id)
+            .exists()
+        )
+        query = select(func.count()).select_from(EventModel).where(and_(
+            EventModel.date >= func.current_timestamp(),
+            subquery
+        ))
+        total = await self.session.scalar(query)
+        return total
+
+    async def get_dash_events_hot(self, skip: int, limit: int) -> List[EventModel]:
+        stmt = (
+            select(
+                EventModel.id,
+                EventModel.name,
+                EventModel.location,
+                EventModel.date,
+                func.count().label('total_tickets'),
+                func.sum(
+                    case(
+                        (TicketModel.is_for_sale == True, 1),
+                        else_=0
+                    )
+                ).label('tickets_selling'),
+                func.sum(
+                    case(
+                        (TicketModel.is_for_sale == False, 1),
+                        else_=0
+                    )
+                ).label('tickets_buying'),
+                func.avg(
+                    case(
+                        (TicketModel.is_for_sale == True, TicketModel.price),
+                        else_=None
+                    )
+                ).label('average_price_selling'),
+                func.avg(
+                    case(
+                        (TicketModel.is_for_sale == False, TicketModel.price),
+                        else_=None
+                    )
+                ).label('average_price_buying')
+            )
+            .select_from(
+                join(EventModel, TicketModel, TicketModel.event_id == EventModel.id)
+            )
+            .where(EventModel.date >= func.current_timestamp())
+            .group_by(EventModel.id, EventModel.name, EventModel.date, EventModel.location)
+            .order_by(desc(func.count()))
+            .offset(skip)
+            .limit(limit)
+        )
+
+        result = await self.session.execute(stmt)
+        return result.fetchall()
+
 
 
