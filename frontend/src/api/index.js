@@ -15,7 +15,7 @@ import {
   getDashUsersStats,
   getDashUsers,
 } from './users'
-import { getEventById, createEvent, getEvents } from './events'
+import { getEventById, createEvent, getEvents, getDashEvents } from './events'
 import { logout, login, forgotPassword, resetPassword } from './auth'
 
 const api = {
@@ -32,6 +32,7 @@ const api = {
   getDashUsersStats,
   getDashUsers,
   getEventById,
+  getDashEvents,
   createEvent,
   getEvents,
   logout,

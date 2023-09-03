@@ -12,6 +12,7 @@ import {
   TableContainer,
   Paper,
   TablePagination,
+  Typography,
 } from '@mui/material'
 import ReactApexChart from 'react-apexcharts'
 import api from '../api'
@@ -19,52 +20,98 @@ import useChart from '../components/chart'
 import moment from 'moment'
 
 export default function AdminDashboard() {
+  const [userTableData, setUserTableData] = useState([])
+  const [userPage, setUserPage] = useState(0)
+  const [userRowsPerPage, setUserRowsPerPage] = useState(5)
+  const [userTotalCount, setUserTotalCount] = useState(0)
+
+  const [eventTableData, setEventTableData] = useState([])
+  const [eventPage, setEventPage] = useState(0)
+  const [eventRowsPerPage, setEventRowsPerPage] = useState(5)
+  const [eventTotalCount, setEventTotalCount] = useState(0)
+
   const [ticketData, setTicketData] = useState([])
   const [userData, setUserData] = useState([])
-  const [tableData, setTableData] = useState([])
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(5)
-  const [totalCount, setTotalCount] = useState(0) // Added for tracking total count
 
   const chartOptions = useChart({
     xaxis: { type: 'datetime' },
   })
 
-  const handleChangePage = async (event, newPage) => {
-    setPage(newPage)
+  const handleChangeUserPage = async (event, newUserPage) => {
+    setUserPage(newUserPage)
     const { data, totalCount } = await api.getDashUsers(
-      newPage * rowsPerPage,
-      rowsPerPage
+      newUserPage * userRowsPerPage,
+      userRowsPerPage
     )
-    setTableData(data)
-    setTotalCount(totalCount) // Update total count
+    setUserTableData(data)
+    setUserTotalCount(totalCount)
   }
 
-  const handleChangeRowsPerPage = async (event) => {
-    const newRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(newRowsPerPage)
-    setPage(0)
-    const { data, totalCount } = await api.getDashUsers(0, newRowsPerPage)
-    setTableData(data)
-    setTotalCount(totalCount) // Update total count
+  const handleChangeUserRowsPerPage = async (event) => {
+    const newUserRowsPerPage = parseInt(event.target.value, 10)
+    setUserRowsPerPage(newUserRowsPerPage)
+    setUserPage(0)
+    const { data, totalCount } = await api.getDashUsers(0, newUserRowsPerPage)
+    setUserTableData(data)
+    setUserTotalCount(totalCount)
+  }
+
+  // Função para manipular a paginação e buscar dados da tabela de eventos
+  const handleChangeEventPage = async (event, newEventPage) => {
+    setEventPage(newEventPage)
+    const { data, totalCount } = await api.getDashEvents(
+      newEventPage * eventRowsPerPage,
+      eventRowsPerPage
+    )
+    setEventTableData(data)
+    setEventTotalCount(totalCount)
+  }
+
+  const handleChangeEventRowsPerPage = async (event) => {
+    const newEventRowsPerPage = parseInt(event.target.value, 10)
+    setEventRowsPerPage(newEventRowsPerPage)
+    setEventPage(0)
+    const { data, totalCount } = await api.getDashEvents(0, newEventRowsPerPage)
+    setEventTableData(data)
+    setEventTotalCount(totalCount)
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const ticketStats = await api.getDashTicketsStats()
+    const fetchUserData = async () => {
+      const { data, totalCount } = await api.getDashUsers(0, userRowsPerPage)
       const userStats = await api.getDashUsersStats()
-      const { data, totalCount } = await api.getDashUsers(0, rowsPerPage) // Fetch total count along with initial data
-      setTicketData(ticketStats)
       setUserData(userStats)
-      setTableData(data)
-      setTotalCount(totalCount) // Set initial total count
+      setUserTableData(data)
+      setUserTotalCount(totalCount)
     }
 
-    fetchData()
-  }, [rowsPerPage])
+    fetchUserData()
+  }, [userRowsPerPage]) // este useEffect será re-executado sempre que userRowsPerPage mudar
+
+  useEffect(() => {
+    const fetchEventAndTicketData = async () => {
+      const ticketStats = await api.getDashTicketsStats()
+      setTicketData(ticketStats)
+      const { data, totalCount } = await api.getDashEvents(0, eventRowsPerPage)
+      setEventTableData(data)
+      setEventTotalCount(totalCount)
+    }
+    fetchEventAndTicketData()
+  }, [eventRowsPerPage])
 
   return (
     <Grid container justifyContent="center" sx={{ pb: 3, pt: 3 }}>
+      <Grid item xs={12}>
+        <Typography
+          variant="h3"
+          align="center"
+          sx={{
+            mb: 3,
+          }}
+        >
+          Dashboard
+        </Typography>
+      </Grid>
       <Grid container spacing={3} sx={{ width: { sm: '80%', xs: '100%' } }}>
         <Grid item xs={12} sm={6}>
           <Card>
@@ -99,31 +146,35 @@ export default function AdminDashboard() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {tableData.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell>
-                        {moment(row.created_at).format('DD/MM/YYYY HH:mm')}
-                      </TableCell>
-                      <TableCell>
-                        {row.first_name + ' ' + row.last_name}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {userTableData.map(
+                    (
+                      row // Usando userTableData para os usuários
+                    ) => (
+                      <TableRow key={row.id}>
+                        <TableCell>
+                          {moment(row.created_at).format('DD/MM/YYYY HH:mm')}
+                        </TableCell>
+                        <TableCell>
+                          {row.first_name + ' ' + row.last_name}
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={totalCount} // Using the total count from the API
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
+                count={userTotalCount} // Usando userTotalCount para os usuários
+                rowsPerPage={userRowsPerPage}
+                page={userPage}
+                onPageChange={handleChangeUserPage}
+                onRowsPerPageChange={handleChangeUserRowsPerPage}
               />
             </TableContainer>
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <Card>
             <CardHeader title="Ingressos de Compra e Venda" />
             <Box sx={{ p: 3, pb: 1 }} dir="ltr">
@@ -149,6 +200,54 @@ export default function AdminDashboard() {
                 height={325}
               />
             </Box>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Card>
+            <CardHeader title="Top Eventos com Ofertas" />
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>id</TableCell>
+                    <TableCell>Nome</TableCell>
+                    <TableCell>Local</TableCell>
+                    <TableCell>Ofertas Total</TableCell>
+                    <TableCell>Ofertas Compra</TableCell>
+                    <TableCell>Ofertas Venda</TableCell>
+                    <TableCell>Preço Médio Compra</TableCell>
+                    <TableCell>Preço Médio Venda</TableCell>
+                    <TableCell>Data</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {eventTableData.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell>{row.id}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.location}</TableCell>
+                      <TableCell>{row.total_tickets}</TableCell>
+                      <TableCell>{row.tickets_buying}</TableCell>
+                      <TableCell>{row.tickets_selling}</TableCell>
+                      <TableCell>{row.average_price_buying}</TableCell>
+                      <TableCell>{row.average_price_selling}</TableCell>
+                      <TableCell>
+                        {moment(row.date).format('DD/MM/YYYY HH:mm')}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={eventTotalCount} // Usando userTotalCount para os usuários
+                rowsPerPage={eventRowsPerPage}
+                page={eventPage}
+                onPageChange={handleChangeEventPage}
+                onRowsPerPageChange={handleChangeEventRowsPerPage}
+              />
+            </TableContainer>
           </Card>
         </Grid>
       </Grid>

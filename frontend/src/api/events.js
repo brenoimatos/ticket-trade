@@ -37,3 +37,15 @@ export async function getEvents(debouncedSearchTerm, setSearchResults) {
     .then((data) => setSearchResults(data))
     .catch((err) => console.error(err))
 }
+
+export async function getDashEvents(skip, limit) {
+  return fetch(`${apiBaseUrl}/events/dash/hot?skip=${skip}&limit=${limit}`, {
+    credentials: 'include',
+  })
+    .then(async (res) => {
+      const totalCount = res.headers.get('Content-Range') // Extract total count from the headers
+      const data = await res.json()
+      return { data, totalCount: parseInt(totalCount.split('/')[1], 10) } // Extract and return both data and totalCount
+    })
+    .catch((err) => console.error(err))
+}

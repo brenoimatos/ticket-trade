@@ -87,16 +87,16 @@ class EventDal(Dal):
                 EventModel.name,
                 EventModel.location,
                 EventModel.date,
-                func.sum(TicketModel.quantity).label('total_tickets'),
+                func.count().label('total_tickets'),
                 func.sum(
                     case(
-                        (TicketModel.is_for_sale == True, TicketModel.quantity),
+                        (TicketModel.is_for_sale == True, 1),
                         else_=0
                     )
                 ).label('tickets_selling'),
                 func.sum(
                     case(
-                        (TicketModel.is_for_sale == False, TicketModel.quantity),
+                        (TicketModel.is_for_sale == False, 1),
                         else_=0
                     )
                 ).label('tickets_buying'),
@@ -118,7 +118,7 @@ class EventDal(Dal):
             )
             .where(EventModel.date >= func.current_timestamp())
             .group_by(EventModel.id, EventModel.name, EventModel.date, EventModel.location)
-            .order_by(desc(func.sum(TicketModel.quantity)))
+            .order_by(desc(func.count()))
             .offset(skip)
             .limit(limit)
         )
