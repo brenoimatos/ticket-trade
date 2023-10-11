@@ -1,2 +1,3 @@
 # Autodetect text files and set them to use LF line endings
 * text=auto eol=lf
+*.ipynb linguist-vendored
