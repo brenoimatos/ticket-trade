@@ -2,7 +2,7 @@
 
 Welcome to the repository of Banca, an online peer-to-peer marketplace dedicated to buying and selling tickets for events. Our platform aims to be more organized, scalable, centralized, and trustworthy compared to traditional methods like WhatsApp and Facebook groups. The events listed on Banca are web scraped from a ticketing platform, ensuring a wide variety of events for users to engage with.
 
-Check it out live at [bancaingressos.com](https://bancaingressos.com).
+Check it out a demo at [Youtube](https://www.youtube.com/watch?v=1IjveS0EHx8).
 
 
 ## Table of Contents
